@@ -10,4 +10,4 @@ GET	/assets/*file	controllers.Assets.versioned(path="/public", file: Asset)
 
 # sensor checkin
 POST	/checkin	controllers.Listener.checkin()
-GET	/list		controllers.Listener.list()
+GET	/list		controllers.Viewer.list()

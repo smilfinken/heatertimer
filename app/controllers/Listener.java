@@ -48,10 +48,4 @@ public class Listener extends Controller {
             }
         }
     }
-
-    @Transactional(readOnly = true)
-    public Result list() {
-        List<SensorReading> readings = (List<SensorReading>) JPA.em().createQuery("select r from SensorReading r").getResultList();
-        return ok(toJson(readings));
-    }
 }
