@@ -9,7 +9,7 @@
     </head>
     <body>
             @for(reading <- readings) {
-            <div>@reading.sensorId<div></div>@reading.temperature<div></div>@reading.humidity<div></div>@reading.timestamp</div><br/>
+            <div>@reading.sensorId @reading.temperature @reading.humidity @reading.timestamp</div><br/>
             }
     </body>
 </html>
