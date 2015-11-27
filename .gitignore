@@ -1,4 +1,3 @@
-# Ignore Play! working directory #
 *swp
 *~
 .idea
@@ -10,3 +9,4 @@ activator*
 test-result
 *.iml
 .cache
+.history
