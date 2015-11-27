@@ -27,8 +27,8 @@ public class Listener extends Controller {
 
                 if (json.findPath("sensorStatus").textValue().toUpperCase().equals("OK")) {
                     String sensorId = json.findPath("sensorId").textValue();
-                    float temperature = Float.parseFloat(json.findPath("currentTemp").textValue());
-                    float humidity = Float.parseFloat(json.findPath("currentHumidity").textValue());
+                    double temperature = json.findPath("currentTemp").doubleValue();
+                    double humidity = json.findPath("currentHumidity").doubleValue();
 
                     models.SensorReading reading = new models.SensorReading(sensorId, temperature, humidity);
                     JPA.em().persist(reading);

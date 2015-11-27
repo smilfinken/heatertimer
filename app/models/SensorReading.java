@@ -16,12 +16,12 @@ public class SensorReading {
     @Column(nullable = false)
     public Date timestamp;
 
-    public float temperature;
-    public float humidity;
+    public double temperature;
+    public double humidity;
 
     public SensorReading() { }
 
-    public SensorReading(String sensorId, float temperature, float humidity) {
+    public SensorReading(String sensorId, double temperature, double humidity) {
         this.sensorId = sensorId;
         this.temperature = temperature;
         this.humidity = humidity;
