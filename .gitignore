@@ -2,6 +2,7 @@
 *~
 .idea
 activator*
+.sbt*
 /logs/
 /project/project
 /project/target
