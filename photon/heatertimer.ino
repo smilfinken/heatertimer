@@ -2,7 +2,6 @@
  * includes
  */
 
-#include "application.h"
 #include "SparkCorePolledTimer/SparkCorePolledTimer.h"
 #include "PietteTech_DHT/PietteTech_DHT.h"
 #include "SparkJson/SparkJson.h"
@@ -14,7 +13,7 @@
  */
 
 #define DHTTYPE DHT22
-#define DHTPIN  6
+#define DHTPIN  D6
 
 void dht_wrapper(); // must be declared before the lib initialization
 PietteTech_DHT DHT(DHTPIN, DHTTYPE, dht_wrapper);
@@ -27,8 +26,8 @@ void dht_wrapper() {
  * defines and declarations for connected components
  */
 
-#define RELAYPIN1 0
-#define RELAYPIN2 1
+#define RELAYPIN1 D0
+#define RELAYPIN2 D1
 
 /*
  * constants
@@ -37,7 +36,6 @@ void dht_wrapper() {
 #define MINVALUE -9999
 #define CHECKIN_INTERVAL    5 * 60 * 1000  // once every 5 minutes
 #define SENSOR_INTERVAL     1 * 60 * 1000  // once every minute
-#define SENSOR_ID "heatertimer"
 #define SERVICE_HOST "projects.smilfinken.net"
 #define SERVICE_PORT 9000
 #define SERVICE_PATH "/checkin"
@@ -54,6 +52,7 @@ SparkCorePolledTimer getTemperatureTimer(SENSOR_INTERVAL);
  * declarations for current state
  */
 
+char deviceId[64] = "";
 double currentTemp = MINVALUE;
 double currentHumidity = MINVALUE;
 char sensorStatus[32] = "";
@@ -113,7 +112,7 @@ void callServer() {
     StaticJsonBuffer<400> jsonBuffer;
     JsonObject& jsonBody = jsonBuffer.createObject();
   
-    jsonBody["sensorId"] = SENSOR_ID;
+    jsonBody["sensorId"] = deviceId;
     jsonBody["sensorStatus"] = sensorStatus;
     jsonBody["currentTemp"] = currentTemp;
     jsonBody["currentHumidity"] = currentHumidity;
@@ -158,8 +157,11 @@ void callServer() {
  */
  
 void setup() {
+    // get device ID
+    strcpy(deviceId, System.deviceID());
+    
     // setup sensor pins
-    //pinMode(DHTPIN, INPUT);
+    pinMode(DHTPIN, INPUT_PULLUP);
 
     // setup controller pins
     pinMode(RELAYPIN1, OUTPUT);
