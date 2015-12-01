@@ -1,4 +1,11 @@
 /*
+ * system config
+ */
+ 
+//SYSTEM_THREAD(ENABLED);
+
+
+/*
  * includes
  */
 
@@ -26,19 +33,26 @@ void dht_wrapper() {
  * defines and declarations for connected components
  */
 
-#define RELAYPIN1 D0
-#define RELAYPIN2 D1
+#define ON true
+#define OFF false
+
+#define RELAYPIN_1 D0
+#define RELAYPIN_2 D1
+#define POWERPIN_R A0
+#define POWERPIN_G A1
+#define POWERPIN_B A2
 
 /*
  * constants
  */
 
-#define MINVALUE -9999
-#define CHECKIN_INTERVAL    5 * 60 * 1000  // once every 5 minutes
-#define SENSOR_INTERVAL     1 * 60 * 1000  // once every minute
-#define SERVICE_HOST "projects.smilfinken.net"
-#define SERVICE_PORT 9000
-#define SERVICE_PATH "/checkin"
+const int RELAYS[] = { RELAYPIN_1, RELAYPIN_2 };
+const int MINVALUE = -9999;
+const int CHECKIN_INTERVAL = 5 * 60 * 1000;  // once every 5 minutes
+const int SENSOR_INTERVAL = 1 * 60 * 1000;  // once every minute
+const char SERVICE_HOST[] = "projects.smilfinken.net";
+const int SERVICE_PORT = 9000;
+const char SERVICE_PATH[] = "/checkin";
 
 /*
  * declarations for the timer events
@@ -60,7 +74,65 @@ char sensorStatus[32] = "";
 /*
  * private methods
  */
- 
+
+void setRelay(int relay, bool on) {
+    if (relay <= (sizeof(RELAYS)/sizeof(int))) {
+        digitalWrite(RELAYS[relay], on ? HIGH : LOW);
+    }
+}
+
+void initRelays() {
+    for (int i = 0; i < (sizeof(RELAYS)/sizeof(int)); i++) {
+        pinMode(RELAYS[i], OUTPUT);
+        setRelay(i, OFF);
+    }
+}
+
+void setPowerLED(int red, int green, int blue) {
+    analogWrite(POWERPIN_R, red);
+    analogWrite(POWERPIN_G, green);
+    analogWrite(POWERPIN_B, blue);
+}
+
+void initPowerLED() {
+    pinMode(POWERPIN_R, OUTPUT);
+    pinMode(POWERPIN_G, OUTPUT);
+    pinMode(POWERPIN_B, OUTPUT);
+    setPowerLED(0, 0, 0);
+}
+
+void setStatusOK() {
+    setPowerLED(0, 255, 0);
+}
+
+void setStatusError() {
+    setPowerLED(255, 0, 0);
+}
+
+void setStatusConnecting() {
+    setPowerLED(128, 0, 128);
+}
+
+void performAction(const char* action, const char*arguments) {
+    Serial.printf("performing action %s with arguments %s", action, arguments);
+    
+    // split arguments
+    if (!strcmp(action, "on")) {
+        digitalWrite(RELAYPIN_1, HIGH);
+        digitalWrite(RELAYPIN_2, LOW);
+    } else if (!strcmp(action, "off")) {
+        digitalWrite(RELAYPIN_1, LOW);
+        digitalWrite(RELAYPIN_2, LOW);
+    } else {
+        digitalWrite(RELAYPIN_1, HIGH);
+        digitalWrite(RELAYPIN_2, HIGH);
+    }
+}
+
+void performAction(ArduinoJson::JsonObject& action) {
+    performAction(action["action"], action["arguments"]);
+}
+
 void getTemperature() {
     int result = DHT.acquireAndWait();
     currentTemp = MINVALUE;
@@ -101,7 +173,7 @@ void getTemperature() {
 }
 
 void callServer() {
-    digitalWrite(RELAYPIN2, LOW);
+    setStatusConnecting();
 
     http_request_t request;
     request.hostname = SERVICE_HOST;
@@ -127,27 +199,28 @@ void callServer() {
         { NULL, NULL } // NOTE: Always terminate headers will NULL
     };
     http_response_t response;
-    HttpClient http;
-    http.post(request, response, headers);
     
-    char responseBody[200];
-    response.body.toCharArray(responseBody, 200);
-    JsonObject& jsonResponse = jsonBuffer.parseObject(responseBody);
-    if (jsonResponse.success()) {
-        const char* action = jsonResponse["action"];
-        if (!strcmp(action, "on")) {
-            digitalWrite(RELAYPIN1, HIGH);
-            digitalWrite(RELAYPIN2, LOW);
-        } else if (!strcmp(action, "off")) {
-            digitalWrite(RELAYPIN1, LOW);
-            digitalWrite(RELAYPIN2, LOW);
+    if (WiFi.ready()) {
+        HttpClient http;
+        http.post(request, response, headers);
+        
+        char responseBody[200];
+        response.body.toCharArray(responseBody, 200);
+        JsonObject& jsonResponse = jsonBuffer.parseObject(responseBody);
+        if (jsonResponse.success()) {
+            if (jsonResponse["actions"].is<JsonArray&>())
+            {
+                const char* array = jsonResponse["actions"];
+                JsonArray& actions = jsonBuffer.parseArray(const_cast<char*>(array));
+                for (int i = 0; i < actions.size(); i++) {
+                    performAction(actions[i]);
+                }
+            } else {
+                performAction(jsonResponse["action"], jsonResponse["arguments"]);
+            }
         } else {
-            digitalWrite(RELAYPIN1, HIGH);
-            digitalWrite(RELAYPIN2, HIGH);
+            setStatusError();    
         }
-    } else {
-        digitalWrite(RELAYPIN1, LOW);
-        digitalWrite(RELAYPIN2, HIGH);
     }
 }
 
@@ -157,15 +230,18 @@ void callServer() {
  */
  
 void setup() {
+    Serial.begin(9600);
+ 
+    // set status
+    setStatusConnecting();
+    
     // get device ID
     strcpy(deviceId, System.deviceID());
     
-    // setup sensor pins
+    // initialise pins
     pinMode(DHTPIN, INPUT_PULLUP);
-
-    // setup controller pins
-    pinMode(RELAYPIN1, OUTPUT);
-    pinMode(RELAYPIN2, OUTPUT);
+    initPowerLED();
+    initRelays();
 
     // setup timer events
     getTemperatureTimer.SetCallback(getTemperature);
