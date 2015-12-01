@@ -31,14 +31,14 @@
                 </tr>
             </thead>
             <tbody>
+                @for(reading <- readings) {
                 <tr>
-                    @for(reading <- readings) {
                     <td>@reading.sensorId</td>
                     <td>@reading.temperature</td>
                     <td>@reading.humidity</td>
                     <td>@reading.timestamp</td>
-                    }
                 </tr>
+                }
             </tbody>
         </table>
     </body>
