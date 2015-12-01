@@ -1,6 +1,19 @@
 @(readings: List[SensorReading])
 <!DOCTYPE html>
 
+<head>
+    <style>
+        .sensorreadings { table-layout: fixed; width: 100%; white-space: nowrap; }
+        .sensorreadings td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Column widths are based on these cells */
+        .device { text-align: left; width: 30%; }
+        .temperature { text-align: left; width: 20%; }
+        .humidity { text-align: left; width: 20%; }
+        .timestamp { text-align: left; width: 30%; }
+    </style>
+</head>
+
 <html lang="en">
     <head>
         <title>Sensor readings</title>
@@ -8,8 +21,23 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
     </head>
     <body>
-            @for(reading <- readings) {
-            <div>@reading.sensorId @reading.temperature @reading.humidity @reading.timestamp</div><br/>
-            }
+        <table class="sensorreadings">
+            <thead>
+                <tr>
+                    <th class="device">Sensor</th>
+                    <th class="temperature">Temperature</th>
+                    <th class="humidity">Humidity</th>
+                    <th class="timestamp">Measured</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(reading <- readings) {
+                <td>@reading.sensorId</td>
+                <td>@reading.temperature</td>
+                <td>@reading.humidity</td>
+                <td>@reading.timestamp</td>
+                }
+            </tbody>
+        </table>
     </body>
 </html>
