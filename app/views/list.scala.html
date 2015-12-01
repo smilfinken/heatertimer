@@ -32,8 +32,7 @@
             </thead>
             <tbody>
                 <tr>
-                    @for(reading <- readings)
-                    {
+                    @for(reading <- readings) {
                     <td>@reading.sensorId</td>
                     <td>@reading.temperature</td>
                     <td>@reading.humidity</td>
