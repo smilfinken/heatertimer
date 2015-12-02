@@ -1,26 +1,5 @@
 @(readings: List[SensorReading])
-<!DOCTYPE html>
-
-<head>
-    <style>
-        .sensorreadings { table-layout: fixed; width: 100%; white-space: nowrap; }
-        .sensorreadings td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* Column widths are based on these cells */
-        .device { text-align: left; width: 30%; }
-        .temperature { text-align: left; width: 20%; }
-        .humidity { text-align: left; width: 20%; }
-        .timestamp { text-align: left; width: 30%; }
-    </style>
-</head>
-
-<html lang="en">
-    <head>
-        <title>Sensor readings</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-    </head>
-    <body>
+@main("Sensor readings") {
         <table class="sensorreadings">
             <thead>
                 <tr>
@@ -39,5 +18,4 @@
                 }
             </tbody>
         </table>
-    </body>
-</html>
+}

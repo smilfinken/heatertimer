@@ -1,0 +1,12 @@
+    @media (min-width: 30em) {
+    .row { width: 100%; display: table; table-layout: fixed; }
+    .col { display: table-cell; }
+
+    .sensorreadings { table-layout: fixed; width: 100%; white-space: nowrap; }
+    .sensorreadings td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Column widths are based on these cells */
+    .device { text-align: left; width: 30%; }
+    .temperature { text-align: left; width: 20%; }
+    .humidity { text-align: left; width: 20%; }
+    .timestamp { text-align: left; width: 30%; }
