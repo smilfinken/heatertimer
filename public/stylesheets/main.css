@@ -1,12 +1,17 @@
-    @media (min-width: 30em) {
-    .row { width: 100%; display: table; table-layout: fixed; }
-    .col { display: table-cell; }
+/* navigation layout */
+.sidebar { position: absolute; top: 0; bottom: 0; left: 0; width: 50px; background-color: #47a3da; }
+.content { position: relative; margin-left: 50px; }
+.showMenu { font-size: 2em; }
 
-    .sensorreadings { table-layout: fixed; width: 100%; white-space: nowrap; }
-    .sensorreadings td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (min-width: 30em) {
+.row { width: 100%; display: table; table-layout: fixed; }
+.col { display: table-cell; }
 
-    /* Column widths are based on these cells */
-    .device { text-align: left; width: 30%; }
-    .temperature { text-align: left; width: 20%; }
-    .humidity { text-align: left; width: 20%; }
-    .timestamp { text-align: left; width: 30%; }
+.sensorreadings { table-layout: fixed; width: 100%; white-space: nowrap; }
+.sensorreadings td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Column widths are based on these cells */
+.device { text-align: left; width: 30%; }
+.temperature { text-align: left; width: 20%; }
+.humidity { text-align: left; width: 20%; }
+.timestamp { text-align: left; width: 30%; }

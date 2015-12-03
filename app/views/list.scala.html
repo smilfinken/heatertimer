@@ -1,23 +1,23 @@
 @(readings: List[SensorReading])
 @main("Sensor readings") {
-        <table class="sensorreadings">
-            <thead>
-                <tr>
-                    <th class="device">Sensor</th>
-                    <th class="temperature">Temperature</th>
-                    <th class="humidity">Humidity</th>
-                    <th class="timestamp">Measured</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for(reading <- readings) {
-                <tr>
-                    <td>@reading.sensorId</td>
-                    <td>@reading.temperature</td>
-                    <td>@reading.humidity</td>
-                    <td>@reading.timestamp</td>
-                </tr>
-                }
-            </tbody>
-        </table>
+            <table class="sensorreadings">
+                <thead>
+                    <tr>
+                        <th class="device">Sensor</th>
+                        <th class="temperature">Temperature</th>
+                        <th class="humidity">Humidity</th>
+                        <th class="timestamp">Measured</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(reading <- readings) {
+                    <tr>
+                        <td>@reading.sensorId</td>
+                        <td>@reading.temperature</td>
+                        <td>@reading.humidity</td>
+                        <td>@reading.timestamp</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
 }

@@ -4,6 +4,10 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
+val buildSettings = Defaults.defaultSettings ++ Seq(
+  javaOptions += "-Xmx512M"
+)
+
 scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
