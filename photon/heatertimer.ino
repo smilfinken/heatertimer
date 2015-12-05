@@ -1,7 +1,8 @@
 /*
  * system config
  */
- 
+
+#define DEBUG
 //SYSTEM_THREAD(ENABLED);
 
 
@@ -33,14 +34,16 @@ void dht_wrapper() {
  * defines and declarations for connected components
  */
 
-#define ON true
-#define OFF false
+#define SIGNAL_ON true
+#define SIGNAL_OFF false
+#define RELAY_ON LOW
+#define RELAY_OFF HIGH
 
-#define RELAYPIN_1 D0
-#define RELAYPIN_2 D1
-#define POWERPIN_R A0
-#define POWERPIN_G A1
-#define POWERPIN_B A2
+#define RELAYPIN_1 A0
+#define RELAYPIN_2 A1
+#define POWERPIN_R D0
+#define POWERPIN_G D1
+#define POWERPIN_B D2
 
 /*
  * constants
@@ -60,6 +63,8 @@ const char SERVICE_PATH[] = "/checkin";
 
 SparkCorePolledTimer callServerTimer(CHECKIN_INTERVAL);
 SparkCorePolledTimer getTemperatureTimer(SENSOR_INTERVAL);
+//Timer callServerTimer(CHECKIN_INTERVAL, callServer);
+//Timer getTemperatureTimer(SENSOR_INTERVAL, getTemperature);
 
 
 /*
@@ -76,19 +81,28 @@ char sensorStatus[32] = "";
  */
 
 void setRelay(int relay, bool on) {
+    #ifdef DEBUG
+    Serial.printf("relay %d going %s\n", relay, on ? "ON" : "OFF");
+    #endif
     if (relay <= (sizeof(RELAYS)/sizeof(int))) {
-        digitalWrite(RELAYS[relay], on ? HIGH : LOW);
+        digitalWrite(RELAYS[relay - 1], on ? RELAY_ON : RELAY_OFF);
     }
 }
 
 void initRelays() {
+    #ifdef DEBUG
+    Serial.printf("init relays: %d %d\n", sizeof(RELAYS), sizeof(int));
+    #endif
     for (int i = 0; i < (sizeof(RELAYS)/sizeof(int)); i++) {
         pinMode(RELAYS[i], OUTPUT);
-        setRelay(i, OFF);
+        setRelay(i, SIGNAL_OFF);
     }
 }
 
 void setPowerLED(int red, int green, int blue) {
+    #ifdef DEBUG
+    Serial.printf("setting LED to %d %d %d\n", red, green, blue);
+    #endif
     analogWrite(POWERPIN_R, red);
     analogWrite(POWERPIN_G, green);
     analogWrite(POWERPIN_B, blue);
@@ -98,34 +112,37 @@ void initPowerLED() {
     pinMode(POWERPIN_R, OUTPUT);
     pinMode(POWERPIN_G, OUTPUT);
     pinMode(POWERPIN_B, OUTPUT);
-    setPowerLED(0, 0, 0);
+
+    // set status
+    setStatusConnecting();
 }
 
 void setStatusOK() {
-    setPowerLED(0, 255, 0);
+    setPowerLED(0, 255, 0); // green
 }
 
 void setStatusError() {
-    setPowerLED(255, 0, 0);
+    setPowerLED(255, 0, 0); // red
 }
 
 void setStatusConnecting() {
-    setPowerLED(128, 0, 128);
+    setPowerLED(155, 165, 0); // kinda orange
 }
 
 void performAction(const char* action, const char*arguments) {
-    Serial.printf("performing action %s with arguments %s", action, arguments);
+    #ifdef DEBUG
+    Serial.printf("performing action '%s' with arguments '%s'\n", action, arguments);
+    #endif
     
-    // split arguments
+    // TODO: split arguments
     if (!strcmp(action, "on")) {
-        digitalWrite(RELAYPIN_1, HIGH);
-        digitalWrite(RELAYPIN_2, LOW);
+        setRelay(1, SIGNAL_ON);
+        setRelay(2, SIGNAL_ON);
     } else if (!strcmp(action, "off")) {
-        digitalWrite(RELAYPIN_1, LOW);
-        digitalWrite(RELAYPIN_2, LOW);
+        setRelay(1, SIGNAL_OFF);
+        setRelay(2, SIGNAL_OFF);
     } else {
-        digitalWrite(RELAYPIN_1, HIGH);
-        digitalWrite(RELAYPIN_2, HIGH);
+        setStatusError();
     }
 }
 
@@ -208,9 +225,13 @@ void callServer() {
         response.body.toCharArray(responseBody, 200);
         JsonObject& jsonResponse = jsonBuffer.parseObject(responseBody);
         if (jsonResponse.success()) {
+            setStatusOK();
             if (jsonResponse["actions"].is<JsonArray&>())
             {
                 const char* array = jsonResponse["actions"];
+                #ifdef DEBUG
+                Serial.printf("actions = '%s'\n", array);
+                #endif
                 JsonArray& actions = jsonBuffer.parseArray(const_cast<char*>(array));
                 for (int i = 0; i < actions.size(); i++) {
                     performAction(actions[i]);
@@ -230,11 +251,10 @@ void callServer() {
  */
  
 void setup() {
+    #ifdef DEBUG
     Serial.begin(9600);
+    #endif
  
-    // set status
-    setStatusConnecting();
-    
     // get device ID
     strcpy(deviceId, System.deviceID());
     
@@ -246,10 +266,13 @@ void setup() {
     // setup timer events
     getTemperatureTimer.SetCallback(getTemperature);
     callServerTimer.SetCallback(callServer);
-    
+
     // do one cycle at startup
     getTemperature();
     callServer();
+
+//    callServerTimer.start();
+//    getTemperatureTimer.start();
 }
 
 
