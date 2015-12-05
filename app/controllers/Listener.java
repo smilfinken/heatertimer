@@ -9,6 +9,7 @@ import play.mvc.Result;
 import play.mvc.Controller;
 import play.db.jpa.Transactional;
 import play.db.jpa.JPA;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import play.libs.Json;
@@ -30,7 +31,7 @@ public class Listener extends Controller {
                     double temperature = json.findPath("currentTemp").doubleValue();
                     double humidity = json.findPath("currentHumidity").doubleValue();
 
-                    models.SensorReading reading = new models.SensorReading(sensorId, temperature, humidity);
+                    SensorReading reading = new SensorReading(sensorId, temperature, humidity);
                     JPA.em().persist(reading);
 
                     if (temperature > 23.5) {

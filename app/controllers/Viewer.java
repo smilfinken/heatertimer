@@ -12,7 +12,7 @@ import play.db.jpa.JPA;
 public class Viewer extends Controller {
     @Transactional(readOnly = true)
     public Result list() {
-        List<SensorReading> readings = (List<SensorReading>) JPA.em().createQuery("select r from SensorReading r").getResultList();
-        return ok(list.render(readings));
+        List<SensorReading> readings = (List<SensorReading>) JPA.em().createQuery("select sr from SensorReading sr").getResultList();
+        return ok(readinglist.render(readings));
     }
 }
