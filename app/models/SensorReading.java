@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class SensorReading {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    public String id;
+    public long id;
 
     @Column(nullable = false)
     public String sensorId;
@@ -18,13 +18,15 @@ public class SensorReading {
 
     public double temperature;
     public double humidity;
+    public double pressure;
 
     public SensorReading() { }
 
-    public SensorReading(String sensorId, double temperature, double humidity) {
+    public SensorReading(String sensorId, double temperature, double humidity, double pressure) {
         this.sensorId = sensorId;
         this.temperature = temperature;
         this.humidity = humidity;
+        this.pressure = pressure;
         timestamp = new Date();
     }
 }

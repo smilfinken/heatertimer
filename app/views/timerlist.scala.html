@@ -1,21 +1,31 @@
 @(settings: List[TimerSetting])
 @main("Timer settings") {
-<table class="timersettings">
-    <thead>
-    <tr>
-        <th class="heater">Heater</th>
-        <th class="departuretime">Departure</th>
-        <th class="days">Days</th>
-    </tr>
-    </thead>
-    <tbody>
-    @for(setting <- settings) {
-    <tr>
-        <td>@setting.heater</td>
-        <td>@setting.getDepartureTime()</td>
-        <td>@setting.days</td>
-    </tr>
-    }
-    </tbody>
-</table>
+        <table class='timersettings'>
+            <thead>
+            <tr>
+                <th class='heater'>Heater</th>
+                <th class='departuretime'>Departure</th>
+                <th class='days'>Days</th>
+                <th class='actions'></th>
+            </tr>
+            </thead>
+            <tbody>
+            @for(setting <- settings) {
+            <tr>
+                <td>@setting.heater</td>
+                <td>@setting.getDepartureTime()</td>
+                <td>@setting.days</td>
+                <td>
+                    <form method='post'>
+                        <input type='hidden' name='id' value='@setting.id' />
+                        <button type='submit' formaction='@routes.Timer.edit()'>E</button>
+                        <button type='submit' formaction='@routes.Timer.delete()'>D</button>
+                    </form>
+                </td>
+            </tr>
+            }
+            </tbody>
+        </table>
+
+        <form><button type='submit' formaction='@routes.Timer.edit()' formmethod='post'>N</button></form>
 }

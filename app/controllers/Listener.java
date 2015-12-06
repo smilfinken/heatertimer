@@ -30,8 +30,9 @@ public class Listener extends Controller {
                     String sensorId = json.findPath("sensorId").textValue();
                     double temperature = json.findPath("currentTemp").doubleValue();
                     double humidity = json.findPath("currentHumidity").doubleValue();
+                    double pressure = json.findPath("currentPressure").doubleValue();
 
-                    SensorReading reading = new SensorReading(sensorId, temperature, humidity);
+                    SensorReading reading = new SensorReading(sensorId, temperature, humidity, pressure);
                     JPA.em().persist(reading);
 
                     if (temperature > 23.5) {

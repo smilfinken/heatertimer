@@ -1,0 +1,11 @@
+@(settingForm: Form[TimerSetting])
+@main("Timer settings") {
+    @helper.form(action = routes.Timer.save()) {
+        <input type='hidden' name='id' value='@settingForm("id").value' />
+        @helper.inputText(settingForm("heater"))
+        @helper.inputText(settingForm("hour"))
+        @helper.inputText(settingForm("minute"))
+        @helper.inputText(settingForm("days"))
+        <button formmethod='post'>Save</button>
+    }
+}

@@ -1,12 +1,13 @@
 @(readings: List[SensorReading])
 @main("Sensor readings") {
-            <table class="sensorreadings">
+            <table class='sensorreadings'>
                 <thead>
                     <tr>
-                        <th class="device">Sensor</th>
-                        <th class="temperature">Temperature</th>
-                        <th class="humidity">Humidity</th>
-                        <th class="timestamp">Measured</th>
+                        <th class='device'>Sensor</th>
+                        <th class='temperature'>Temperature</th>
+                        <th class='humidity'>Humidity</th>
+                        <th class='pressure'>Pressure</th>
+                        <th class='timestamp'>Measured</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -15,6 +16,7 @@
                         <td>@reading.sensorId</td>
                         <td>@reading.temperature</td>
                         <td>@reading.humidity</td>
+                        <td>@reading.pressure</td>
                         <td>@reading.timestamp</td>
                     </tr>
                     }

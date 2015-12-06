@@ -3,15 +3,17 @@ package controllers;
 import models.TimerSetting;
 import views.html.*;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
-import play.mvc.Controller;
-import play.mvc.Result;
+import play.data.Form;
 import play.db.jpa.Transactional;
 import play.db.jpa.JPA;
+import play.mvc.Controller;
+import play.mvc.Result;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -28,7 +30,8 @@ public class Timer extends Controller {
         } else {
             try {
                 String heater = json.findPath("heater").textValue();
-                Date departureDate = (new SimpleDateFormat("HH:mm")).parse(json.findPath("departure").textValue());
+                int hour = json.findPath("hour").intValue();
+                int minute = json.findPath("minute").intValue();
                 String days = json.findPath("days").textValue();
 
                 Query query = JPA.em().createQuery("select ts from TimerSetting ts where ts.heater = :heater");
@@ -36,11 +39,12 @@ public class Timer extends Controller {
                 query.setParameter("heater", heater);
                 List<TimerSetting> timerSettings = (List<TimerSetting>) query.getResultList();
                 if (timerSettings.isEmpty()) {
-                    TimerSetting timerSetting = new models.TimerSetting(heater, departureDate, days);
+                    TimerSetting timerSetting = new models.TimerSetting(heater, hour, minute, days);
                     JPA.em().persist(timerSetting);
                 } else {
                     TimerSetting timerSetting = timerSettings.get(0);
-                    timerSetting.departure = departureDate;
+                    timerSetting.hour = hour;
+                    timerSetting.minute = minute;
                     timerSetting.days = days;
                     JPA.em().persist(timerSetting);
                 }
@@ -48,7 +52,46 @@ public class Timer extends Controller {
             }
         }
 
-        return list();
+        return ok();
+    }
+
+
+    @Transactional
+    public Result edit() {
+        Form<TimerSetting> settingForm = Form.form(TimerSetting.class);
+        TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
+        TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
+        if (persistedData != null) {
+            settingForm = settingForm.fill(persistedData);
+        } else {
+            settingForm = settingForm.fill(requestData);
+        }
+
+        return ok(timerset.render(settingForm));
+    }
+
+    @Transactional
+    public Result save() {
+        TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
+        TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
+        if (persistedData != null) {
+            persistedData.copyValues(requestData);
+        } else {
+            JPA.em().persist(requestData);
+        }
+
+        return redirect(routes.Timer.list());
+    }
+
+    @Transactional
+    public Result delete() {
+        TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
+        TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
+        if (persistedData != null) {
+            JPA.em().remove(persistedData);
+        }
+
+        return redirect(routes.Timer.list());
     }
 
     @Transactional(readOnly = true)
