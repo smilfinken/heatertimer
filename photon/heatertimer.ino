@@ -2,7 +2,7 @@
  * system config
  */
 
-#define DEBUG
+#define NODEBUG
 //SYSTEM_THREAD(ENABLED);
 
 
@@ -55,7 +55,7 @@ const int CHECKIN_INTERVAL = 5 * 60 * 1000;  // once every 5 minutes
 const int SENSOR_INTERVAL = 1 * 60 * 1000;  // once every minute
 const char SERVICE_HOST[] = "projects.smilfinken.net";
 const int SERVICE_PORT = 9000;
-const char SERVICE_PATH[] = "/checkin";
+const char SERVICE_PATH[] = "/api/checkin";
 
 /*
  * declarations for the timer events
