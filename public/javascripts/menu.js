@@ -1,15 +1,16 @@
 (function (window) {
 	function attachEvents() {
-		var menuLeft = document.getElementById( 'cbp-spmenu-s1' );
-		var showMenu = document.getElementById( 'showMenu' );
-		var body = document.body;
+		var menuLeft = document.getElementById( 'menu' );
+		var showMenu = document.getElementById( 'showmenu' );
 
 		showMenu.onclick = function() {
-			classie.toggle( menuLeft, 'cbp-spmenu-open' );
+			classie.toggle(menuLeft, 'open');
+			classie.toggle(showMenu, 'open');
 		};
 
 		menuLeft.onclick = function() {
-			classie.toggle( menuLeft, 'cbp-spmenu-open' );
+			classie.toggle(menuLeft, 'open');
+			classie.toggle(showMenu, 'open');
 		};
 	}
 

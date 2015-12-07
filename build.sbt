@@ -5,7 +5,7 @@ version := "1.0-SNAPSHOT"
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
 val buildSettings = Defaults.defaultSettings ++ Seq(
-  javaOptions += "-Xmx512M"
+  javaOptions += "-Xmx512M -Xlint:unchecked"
 )
 
 scalaVersion := "2.11.6"

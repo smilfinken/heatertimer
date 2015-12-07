@@ -1,5 +1,6 @@
 package models;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -60,7 +61,22 @@ public class TimerSetting {
         boolean[] result = { false, false, false, false, false, false, false };
 
         for (int i = 0; i < days.length(); i++) {
-            result[Integer.parseInt(days.substring(i, 1))] = true;
+            try {
+                result[Integer.parseInt(days.substring(i, i + 1)) - 1] = true;
+            } catch (Exception e) { }
+        }
+
+        return result;
+    }
+
+    public ArrayList<DayOfWeek> getDisplayDays() {
+        ArrayList<DayOfWeek> result = new ArrayList<DayOfWeek>();
+
+        boolean[] array = getToggleDays();
+        for (int i = 0; i < array.length; i++) {
+            if (array[i]) {
+                result.add(DayOfWeek.of(i + 1));
+            }
         }
 
         return result;

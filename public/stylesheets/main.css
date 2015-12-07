@@ -1,14 +1,12 @@
 /* navigation layout */
-.sidebar { position: absolute; top: 0; bottom: 0; left: 0; width: 50px; background-color: #47a3da; }
-.content { position: relative; margin-left: 50px; }
-.showMenu { font-size: 2em; }
+.content { position: relative; margin-top: 36px; }
 
 @media (min-width: 30em) {
 .row { width: 100%; display: table; table-layout: fixed; }
 .col { display: table-cell; }
 
-.sensorreadings { table-layout: fixed; width: 100%; white-space: nowrap; }
-.sensorreadings td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fixed-table { table-layout: fixed; width: 100%; white-space: nowrap; }
+.fixed-table td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Column widths are based on these cells */
 .device { text-align: left; width: 30%; }
@@ -16,3 +14,8 @@
 .humidity { text-align: left; width: 15%; }
 .pressure { text-align: left; width: 15%; }
 .timestamp { text-align: left; width: 25%; }
+
+.heater { text-align: left; width: 15%; }
+.departuretime { text-align: left; width: 30%; }
+.days { text-align: left; width: 45%; }
+.actions { text-align: left; width: 10%; }

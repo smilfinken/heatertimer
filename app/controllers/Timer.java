@@ -3,6 +3,9 @@ package controllers;
 import models.TimerSetting;
 import views.html.*;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -22,11 +25,16 @@ import play.libs.Json;
 import static play.libs.Json.*;
 
 public class Timer extends Controller {
+    private static final Logger LOGGER = Logger.getLogger(Timer.class.getName());
+
     @Transactional
     public Result set() {
+        LOGGER.info("set timer api called");
+
         JsonNode json = request().body().asJson();
         if(json == null) {
-            return badRequest("Error parsing data");
+            LOGGER.warning("Error parsing json data");
+            return badRequest("Error parsing data, record not stored.");
         } else {
             try {
                 String heater = json.findPath("heater").textValue();
@@ -49,6 +57,8 @@ public class Timer extends Controller {
                     JPA.em().persist(timerSetting);
                 }
             } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Exception occurred while processing json data", e);
+                return badRequest("Error processing data, record not stored.");
             }
         }
 
@@ -62,8 +72,10 @@ public class Timer extends Controller {
         TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
         TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
         if (persistedData != null) {
+            LOGGER.info("Editing existing record.");
             settingForm = settingForm.fill(persistedData);
         } else {
+            LOGGER.info("Creating new record.");
             settingForm = settingForm.fill(requestData);
         }
 
@@ -75,8 +87,10 @@ public class Timer extends Controller {
         TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
         TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
         if (persistedData != null) {
+            LOGGER.info("Updating existing record.");
             persistedData.copyValues(requestData);
         } else {
+            LOGGER.info("Saving new record.");
             JPA.em().persist(requestData);
         }
 
@@ -88,6 +102,7 @@ public class Timer extends Controller {
         TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
         TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
         if (persistedData != null) {
+            LOGGER.info("Deleting existing record.");
             JPA.em().remove(persistedData);
         }
 

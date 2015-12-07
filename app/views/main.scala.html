@@ -10,17 +10,22 @@
 
         <link rel='shortcut icon' type='image/png' href='@routes.Assets.versioned("images/favicon.png")' />
         <link rel='stylesheet' media='screen' href='@routes.Assets.versioned("stylesheets/main.css")' />
+        <link rel='stylesheet' media='screen' href='@routes.Assets.versioned("stylesheets/toolbar.css")' />
         <link rel='stylesheet' media='screen' href='@routes.Assets.versioned("stylesheets/menu.css")' />
     </head>
     <body onLoad='menu.attachEvents()'>
-        <nav class='cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left' id='cbp-spmenu-s1'>
-            <div class='showMenu'>&lt;&lt;</div>
+        <nav class='menu' id='menu'>
             <a href='/timers'>Timers</a>
             <a href='/readings'>Sensor readings</a>
         </nav>
 
-        <div class='sidebar'>
-            <div class='showMenu' id='showMenu'>&gt;&gt;</div>
+        <div class='toolbar'>
+            <input type='image' class='showmenubutton' id='showmenu' src='@routes.Assets.versioned("images/menu36.png")' />
+            <input type='image' class='newbutton' src='@routes.Assets.versioned("images/new36.png")' />
+            <input type='image' class='editbutton' src='@routes.Assets.versioned("images/edit36.png")' />
+            <input type='image' class='savebutton' src='@routes.Assets.versioned("images/save36.png")' />
+            <input type='image' class='deletebutton' src='@routes.Assets.versioned("images/delete36.png")' />
+            <span class='heading'>@title</span>
         </div>
 
         <div class='content'>
