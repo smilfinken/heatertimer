@@ -1,7 +1,7 @@
 (function (window) {
 	function attachEvents() {
-		var menuLeft = document.getElementById( 'menu' );
-		var showMenu = document.getElementById( 'showmenu' );
+		var menuLeft = document.getElementById('menu');
+		var showMenu = document.getElementById('showmenu');
 
 		showMenu.onclick = function() {
 			classie.toggle(menuLeft, 'open');

@@ -7,6 +7,7 @@
 
         <script src='@routes.Assets.versioned("javascripts/classie.js")' type='text/javascript'></script>
         <script src='@routes.Assets.versioned("javascripts/menu.js")' type='text/javascript'></script>
+        <script src='@routes.Assets.versioned("javascripts/toolbar.js")' type='text/javascript'></script>
 
         <link rel='shortcut icon' type='image/png' href='@routes.Assets.versioned("images/favicon.png")' />
         <link rel='stylesheet' media='screen' href='@routes.Assets.versioned("stylesheets/main.css")' />
@@ -21,10 +22,10 @@
 
         <div class='toolbar'>
             <input type='image' class='showmenubutton' id='showmenu' src='@routes.Assets.versioned("images/menu36.png")' />
-            <input type='image' class='newbutton' src='@routes.Assets.versioned("images/new36.png")' />
-            <input type='image' class='editbutton' src='@routes.Assets.versioned("images/edit36.png")' />
-            <input type='image' class='savebutton' src='@routes.Assets.versioned("images/save36.png")' />
-            <input type='image' class='deletebutton' src='@routes.Assets.versioned("images/delete36.png")' />
+            <input type='image' class='newbutton disabled' id='newbutton' src='@routes.Assets.versioned("images/new36.png")' />
+            <input type='image' class='editbutton disabled' src='@routes.Assets.versioned("images/edit36.png")' />
+            <input type='image' class='savebutton disabled' src='@routes.Assets.versioned("images/save36.png")' />
+            <input type='image' class='deletebutton disabled' src='@routes.Assets.versioned("images/delete36.png")' />
             <span class='heading'>@title</span>
         </div>
 

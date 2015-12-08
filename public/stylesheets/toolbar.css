@@ -18,6 +18,11 @@
     height: 36px;
 }
 
+.toolbar input[type=image].disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
 .toolbar .heading {
     height: 100%;
     display: table-cell;

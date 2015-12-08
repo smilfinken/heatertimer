@@ -31,5 +31,10 @@
                 </tbody>
             </table>
 
-            <form><button type='submit' formaction='@routes.Timer.edit()' formmethod='post'>N</button></form>
+            <form id='newtimerform' method='post' action='@routes.Timer.edit()' />
+
+            <script>
+                toolbar.enableButton('newbutton');
+                toolbar.connectButton('newbutton', 'newtimerform');
+            </script>
 }
