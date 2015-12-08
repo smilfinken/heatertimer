@@ -2,32 +2,35 @@
 .menu {
 	background: #47a3da;
 	position: fixed;
-	-webkit-transition: all 0.3s ease;
-	-moz-transition: all 0.3s ease;
-	transition: all 0.3s ease;
+    font-family: sans-serif;
+    font-size: 1.1em;
 	width: 240px;
 	height: 100%;
 	top: 36px;
 	left: -240px;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	transition: all 0.3s ease;
 	z-index: 1000;
 }
 
 .menu a {
 	display: block;
 	color: #fff;
-	font-size: 1.1em;
-	font-weight: 300;
+	text-decoration: none;
 	border-bottom: 1px solid #258ecd;
 	padding: 1em;
 }
 
 .menu a:hover {
 	background: #258ecd;
+	text-decoration: none;
 }
 
 .menu a:active {
 	background: #afdefa;
 	color: #47a3da;
+	text-decoration: none;
 }
 
 .menu.open {

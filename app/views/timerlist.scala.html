@@ -2,39 +2,39 @@
 @main("Timer settings") {
             <table class='fixed-table timersettings'>
                 <thead>
-                <tr>
-                    <th class='heater'>Heater</th>
-                    <th class='departuretime'>Departure</th>
-                    <th class='days'>Days</th>
-                    <th class='actions'></th>
-                </tr>
+                    <tr>
+                        <th class='heater'>Heater</th>
+                        <th class='departuretime'>Departure</th>
+                        <th class='days'>Days</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @for(setting <- settings) {
-                <tr>
-                    <td>@setting.heater</td>
-                    <td>@setting.getDepartureTime()</td>
-                    <td>
-                        @for(day <- setting.getDisplayDays()) {
-                            @day
-                        }
-                    </td>
-                    <td>
-                        <form method='post'>
-                            <input type='hidden' name='id' value='@setting.id' />
-                            <button type='submit' formaction='@routes.Timer.edit()'>E</button>
-                            <button type='submit' formaction='@routes.Timer.delete()'>D</button>
-                        </form>
-                    </td>
-                </tr>
+                    @for(setting <- settings) {
+                    <tr id='row_@setting.id' onclick='utils.highlightRow("row_@setting.id")'>
+                        <td>@setting.heater</td>
+                        <td>@setting.getDepartureTime()</td>
+                        <td>@for(day <- setting.getDisplayDays()) { @day }</td>
+                        <td>
+                        </td>
+                    </tr>
                 }
                 </tbody>
             </table>
 
-            <form id='newtimerform' method='post' action='@routes.Timer.edit()' />
+            <form id='newitemform' method='post' action='@routes.Timer.edit()'>
+                <input type='hidden' name='id' id='newitemid' value='0' />
+            </form>
+            <form id='edititemform' method='post' action='@routes.Timer.edit()'>
+                <input type='hidden' name='id' id='edititemid' value='0' />
+            </form>
+            <form id='deleteitemform' method='post' action='@routes.Timer.delete()'>
+                <input type='hidden' name='id' id='deleteitemid' value='0' />
+            </form>
 
             <script>
+                toolbar.connectButton('newbutton', 'newitemform');
+                toolbar.connectButton('editbutton', 'edititemform');
+                toolbar.connectButton('deletebutton', 'deleteitemform');
                 toolbar.enableButton('newbutton');
-                toolbar.connectButton('newbutton', 'newtimerform');
             </script>
 }

@@ -1,16 +1,16 @@
 (function (window) {
 	function attachEvents() {
-		var menuLeft = document.getElementById('menu');
-		var showMenu = document.getElementById('showmenu');
+		var menuLeft = document.getElementById("menu");
+		var showMenu = document.getElementById("showmenu");
 
 		showMenu.onclick = function() {
-			classie.toggle(menuLeft, 'open');
-			classie.toggle(showMenu, 'open');
+			classie.toggle(menuLeft, "open");
+			classie.toggle(showMenu, "open");
 		};
 
 		menuLeft.onclick = function() {
-			classie.toggle(menuLeft, 'open');
-			classie.toggle(showMenu, 'open');
+			classie.toggle(menuLeft, "open");
+			classie.toggle(showMenu, "open");
 		};
 	}
 

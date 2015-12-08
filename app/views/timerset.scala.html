@@ -1,34 +1,6 @@
 @(settingForm: Form[TimerSetting])
-@main("Timer settings") {
-    <script>
-        function incrementValue(id, delta, min, max)
-        {
-            if (min < max && delta < max - min) {
-                var value = parseInt(document.getElementById(id).value, 0);
-                value = isNaN(value) ? 0 : value += delta;
-                if (value > max) {
-                    value -= (max + 1);
-                } else {
-                }
-                document.getElementById(id).value = value;
-            }
-        }
-
-        function decrementValue(id, delta, min, max)
-        {
-            if (min < max && delta < max - min) {
-                var value = parseInt(document.getElementById(id).value, 0);
-                value = isNaN(value) ? 0 : value -= delta;
-                if (value < min) {
-                    value += (max + 1);
-                } else {
-                }
-                document.getElementById(id).value = value;
-            }
-        }
-    </script>
-
-    @helper.form(action = routes.Timer.save()) {
+@main(if(settingForm("id").value == "0") { "New departure time" } else { "Edit departure time" }) {
+    @helper.form(action = routes.Timer.save(), 'id -> "saveitemform") {
         <input type='hidden' name='id' value='@settingForm("id").value' />
 
         <div class='heater'>
@@ -36,26 +8,30 @@
         </div>
 
         <div class='hour'>
-            <button type='button' onclick='incrementValue("hour", 1, 0, 23) '>+1</button>
+            <button type='button' onclick='utils.incrementValue("hour", 1, 0, 23) '>+1</button>
             @helper.input(settingForm("hour"), 'class -> "hour", 'size -> "2", 'maxlength -> "2" ) { (id, name, value, args) =>
             <input type='number' name='@name' id='@id' value=@value @toHtmlArgs(args)>
             }
-            <button type='button' onclick='decrementValue("hour", 1, 0, 23) '>-1</button>
+            <button type='button' onclick='utils.decrementValue("hour", 1, 0, 23) '>-1</button>
         </div>
 
         <div class='minute'>
-            <button type='button' onclick='incrementValue("minute", 10, 0, 59) '>+10</button>
-            <button type='button' onclick='incrementValue("minute", 1, 0, 59) '>+1</button>
+            <button type='button' onclick='utils.incrementValue("minute", 10, 0, 59) '>+10</button>
+            <button type='button' onclick='utils.incrementValue("minute", 1, 0, 59) '>+1</button>
             @helper.input(settingForm("minute"), 'class -> "minute", 'size -> "2", 'maxlength -> "2" ) { (id, name, value, args) =>
             <input type='number' name='@name' id='@id' value=@value @toHtmlArgs(args)>
             }
-            <button type='button' onclick='decrementValue("minute", 10, 0, 59) '>-10</button>
-            <button type='button' onclick='decrementValue("minute", 1, 0, 59) '>-1</button>
+            <button type='button' onclick='utils.decrementValue("minute", 10, 0, 59) '>-10</button>
+            <button type='button' onclick='utils.decrementValue("minute", 1, 0, 59) '>-1</button>
         </div>
 
         <div class='days'>
             @helper.inputText(settingForm("days"), 'class -> "days")
-            <button formmethod='post'>Save</button>
         </div>
     }
+
+    <script>
+        toolbar.connectButton('savebutton', 'saveitemform');
+        toolbar.enableButton('savebutton');
+    </script>
 }

@@ -1,12 +1,39 @@
-/* navigation layout */
-.content { position: relative; margin-top: 36px; }
+body {
+    margin: 0px;
+}
 
-@media (min-width: 30em) {
-.row { width: 100%; display: table; table-layout: fixed; }
-.col { display: table-cell; }
+/* page content */
+.content {
+    position: relative;
+    top: 36px;
+    margin-top: 0.5em;
+    font-family: sans-serif;
+}
 
-.fixed-table { table-layout: fixed; width: 100%; white-space: nowrap; }
-.fixed-table td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* table layout for lists */
+.fixed-table {
+    table-layout: fixed;
+    width: auto;
+    margin: 0.5em;
+    white-space: nowrap;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+
+.fixed-table tr.highlighted {
+    background-color: #aa0000;
+}
+
+.fixed-table td, th {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.fixed-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 /* Column widths are based on these cells */
 .device { text-align: left; width: 30%; }
@@ -16,6 +43,5 @@
 .timestamp { text-align: left; width: 25%; }
 
 .heater { text-align: left; width: 15%; }
-.departuretime { text-align: left; width: 30%; }
-.days { text-align: left; width: 45%; }
-.actions { text-align: left; width: 10%; }
+.departuretime { text-align: left; width: 25%; }
+.days { text-align: left; width: 60%; }
