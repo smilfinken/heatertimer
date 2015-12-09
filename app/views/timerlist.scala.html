@@ -1,5 +1,18 @@
 @(settings: List[TimerSetting])
 @main("Timer settings") {
+            <script>
+                function itemClicked(id) {
+                    if (utils.highlightSingleRow("row_" + id)) {
+                        if (utils.setValue("edititemid", "value", id)) {
+                            toolbar.connectButton("editbutton", "edititemform");
+                        }
+                        if (utils.setValue("deleteitemid", "value", id)) {
+                            toolbar.connectButton("deletebutton", "deleteitemform");
+                        }
+                    }
+                }
+            </script>
+
             <table class='fixed-table timersettings'>
                 <thead>
                     <tr>
@@ -10,12 +23,10 @@
                 </thead>
                 <tbody>
                     @for(setting <- settings) {
-                    <tr id='row_@setting.id' onclick='utils.highlightRow("row_@setting.id")'>
+                    <tr class='timersetting' id='row_@setting.id' onclick='itemClicked(@setting.id)'>
                         <td>@setting.heater</td>
                         <td>@setting.getDepartureTime()</td>
                         <td>@for(day <- setting.getDisplayDays()) { @day }</td>
-                        <td>
-                        </td>
                     </tr>
                 }
                 </tbody>
@@ -33,8 +44,5 @@
 
             <script>
                 toolbar.connectButton('newbutton', 'newitemform');
-                toolbar.connectButton('editbutton', 'edititemform');
-                toolbar.connectButton('deletebutton', 'deleteitemform');
-                toolbar.enableButton('newbutton');
             </script>
 }
