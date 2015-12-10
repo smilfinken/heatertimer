@@ -12,6 +12,7 @@
 
 #include "SparkCorePolledTimer/SparkCorePolledTimer.h"
 #include "PietteTech_DHT/PietteTech_DHT.h"
+#include "Adafruit_BMP085/Adafruit_BMP085.h"
 #include "SparkJson/SparkJson.h"
 #include "HttpClient/HttpClient.h"
 
@@ -31,7 +32,17 @@ void dht_wrapper() {
 
 
 /*
- * defines and declarations for connected components
+ * defines and declarations for the air pressure sensor
+ */
+
+#define I2C_DATA D0
+#define I2C_CLOCK D1
+
+Adafruit_BMP085 bmp;
+
+
+/*
+ * defines and declarations for connected output components
  */
 
 #define SIGNAL_ON true
@@ -41,9 +52,9 @@ void dht_wrapper() {
 
 #define RELAYPIN_1 A0
 #define RELAYPIN_2 A1
-#define POWERPIN_R D0
-#define POWERPIN_G D1
-#define POWERPIN_B D2
+#define POWERPIN_R D2
+#define POWERPIN_G D3
+#define POWERPIN_B D4
 
 /*
  * constants
@@ -63,6 +74,7 @@ const char SERVICE_PATH[] = "/api/checkin";
 
 SparkCorePolledTimer callServerTimer(CHECKIN_INTERVAL);
 SparkCorePolledTimer getTemperatureTimer(SENSOR_INTERVAL);
+SparkCorePolledTimer getAirPressureTimer(SENSOR_INTERVAL);
 //Timer callServerTimer(CHECKIN_INTERVAL, callServer);
 //Timer getTemperatureTimer(SENSOR_INTERVAL, getTemperature);
 
@@ -74,6 +86,7 @@ SparkCorePolledTimer getTemperatureTimer(SENSOR_INTERVAL);
 char deviceId[64] = "";
 double currentTemp = MINVALUE;
 double currentHumidity = MINVALUE;
+double currentAirPressure = MINVALUE;
 char sensorStatus[32] = "";
 
 /*
@@ -189,6 +202,10 @@ void getTemperature() {
     }
 }
 
+void getAirPressure() {
+    currentAirPressure = bmp.readPressure();
+}
+
 void callServer() {
     setStatusConnecting();
 
@@ -205,6 +222,7 @@ void callServer() {
     jsonBody["sensorStatus"] = sensorStatus;
     jsonBody["currentTemp"] = currentTemp;
     jsonBody["currentHumidity"] = currentHumidity;
+    jsonBody["currentAirPressure"] = currentAirPressure;
     
     char requestBody[400];
     jsonBody.printTo(requestBody, sizeof(requestBody));
@@ -263,8 +281,12 @@ void setup() {
     initPowerLED();
     initRelays();
 
+    // initialize sensors
+    bmp.begin();
+
     // setup timer events
     getTemperatureTimer.SetCallback(getTemperature);
+    getAirPressureTimer.SetCallback(getAirPressure);
     callServerTimer.SetCallback(callServer);
 
     // do one cycle at startup
@@ -282,5 +304,6 @@ void setup() {
  
 void loop() {
     getTemperatureTimer.Update();
+    getAirPressureTimer.Update();
     callServerTimer.Update();
 }
