@@ -1,5 +1,5 @@
 @(settingForm: Form[TimerSetting])
-@main(if(settingForm("id").value == 0) { "New departure time" } else { "Edit departure time" }) {
+@main(if(settingForm("id").value == "0") { "New departure time" } else { "Edit departure time" }) {
     @helper.form(action = routes.Timer.save(), 'id -> "saveitemform") {
         <input type='hidden' name='id' value='@settingForm("id").value' />
 

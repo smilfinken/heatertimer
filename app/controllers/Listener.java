@@ -3,6 +3,7 @@ package controllers;
 import models.SensorReading;
 import models.TimerSetting;
 
+import java.util.Calendar;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.List;
@@ -18,7 +19,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import play.libs.Json;
-import static play.libs.Json.*;
+import play.libs.Json.*;
 
 public class Listener extends Controller {
     private static final Logger LOGGER = Logger.getLogger("GLOBAL");
@@ -43,6 +44,7 @@ public class Listener extends Controller {
                     JPA.em().persist(reading);
 
                     boolean[] relayStatus = getNewRelayStatusList();
+                    LOGGER.info(String.format("Listener.checkin(): new relay status = %s", relayStatus));
 
                     if (temperature > 23.5) {
                         response.put("action", "off");
@@ -72,6 +74,21 @@ public class Listener extends Controller {
 
         return result;
     }
+
+    private Date getStartTime(Date departureTime) {
+        Calendar target = Calendar.getInstance();
+        target.setTime(departureTime);
+        target.add(Calendar.HOUR, -2); // departureTime - 2h
+        return target.getTime();
+    }
+
+    private Date getStopTime(Date departureTime) {
+        Calendar target = Calendar.getInstance();
+        target.setTime(departureTime);
+        target.add(Calendar.HOUR, 1); // departureTime + grace period
+        return target.getTime();
+    }
+
     private boolean getNewRelayStatus(int heater) {
         boolean result = false;
         Double latestTemperature = getLatestTemperature();
@@ -82,7 +99,10 @@ public class Listener extends Controller {
                 query.setParameter("heater", heater);
                 List<TimerSetting> timers = query.getResultList();
                 for (TimerSetting timer : timers) {
-                    if (timer.getDepartureTime().before(new Date())) {
+                    Date departureTime = timer.getDepartureTime();
+                    Date startTime = getStartTime(departureTime);
+                    Date stopTime = getStopTime(departureTime);
+                    if (startTime.before(new Date()) && stopTime.after(new Date())) {
                         result = true;
                     }
                 }
@@ -95,11 +115,10 @@ public class Listener extends Controller {
     }
 
     private boolean[] getNewRelayStatusList() {
-        boolean[] result = { false, true };
+        boolean[] result = { false, false };
 
-        for (int i = 0; i < 2; i++) {
-            result[i] = getNewRelayStatus(i);
-        }
+        result[0] = getNewRelayStatus(1);
+        result[1] = getNewRelayStatus(2);
 
         return result;
     }

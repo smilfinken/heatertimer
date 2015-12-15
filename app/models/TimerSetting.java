@@ -37,7 +37,7 @@ public class TimerSetting {
     public ArrayList<Integer> days;
 
     public TimerSetting() {
-        this.heater = -1;
+        this.heater = 0;
         this.label = "";
         this.hour = 0;
         this.minute = 0;
@@ -87,35 +87,17 @@ public class TimerSetting {
 
         if (days.size() != 0) {
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
             calendar.set(Calendar.HOUR_OF_DAY, hour);
             calendar.set(Calendar.MINUTE, minute);
 
-            int currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            LOGGER.info(String.format("TimerSetting.getDepartureTime(): currentDayOfWeek = %d", currentDayOfWeek));
-            int[] activeDays = new int[days.size()];
-            for (int i = 0; i < days.size(); i++) {
-                try {
-                    int day = days.get(i);
-                    activeDays[i] = (day < currentDayOfWeek) ? day + 7 : day;
-                    LOGGER.info(String.format("TimerSetting.getDepartureTime(): activeDays[%d] = %d", i, activeDays[i]));
-                } catch (Exception e) {}
-            }
-            java.util.Arrays.sort(activeDays);
-            int nextActiveDay = -1;
-            for (int i = 0; i < activeDays.length && nextActiveDay < 0; i++) {
-                LOGGER.info(String.format("TimerSetting.getDepartureTime(): [sorted] activeDays[%d] = %d", i, activeDays[i]));
-                if (activeDays[i] >= currentDayOfWeek) {
-                    nextActiveDay = activeDays[i] > 7 ? activeDays[i] - 7 : activeDays[i];
+            for (int i = 0; i < 8; i++) {
+                Integer day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+                if (this.days.contains(day) && calendar.getTime().after(new Date())) {
+                    result = calendar.getTime();
+                    break;
                 }
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
             }
-            LOGGER.info(String.format("TimerSetting.getDepartureTime(): nextActiveDay = %d", nextActiveDay));
-            if (nextActiveDay >= 0) {
-                calendar.add(Calendar.DAY_OF_YEAR, nextActiveDay);
-            }
-
-            result = calendar.getTime();
-            LOGGER.info(String.format("TimerSetting.getDepartureTime(): result = %s", result.toString()));
         }
 
         return result;

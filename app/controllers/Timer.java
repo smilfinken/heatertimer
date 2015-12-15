@@ -3,10 +3,6 @@ package controllers;
 import models.TimerSetting;
 import views.html.*;
 
-import java.time.DayOfWeek;
-import java.time.format.TextStyle;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.ArrayList;
@@ -22,7 +18,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import play.libs.Json;
-import static play.libs.Json.*;
+import play.libs.Json.*;
 
 public class Timer extends Controller {
     private static final Logger LOGGER = Logger.getLogger("GLOBAL");
@@ -77,17 +73,13 @@ public class Timer extends Controller {
         Form<TimerSetting> settingForm = Form.form(TimerSetting.class);
         TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
         TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
-        //TimerSetting actualData;
         if (persistedData != null) {
             LOGGER.info("Timer.edit(): Editing existing record.");
-            //actualData = persistedData;
             settingForm = settingForm.fill(persistedData);
         } else {
             LOGGER.info("Timer.edit(): Creating new record.");
-            //actualData = requestData;
             settingForm = settingForm.fill(requestData);
         }
-        //settingForm = settingForm.fill(actualData);
 
         return ok(timerset.render(settingForm));
     }
@@ -97,11 +89,11 @@ public class Timer extends Controller {
         TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
         TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
         if (persistedData != null) {
-            LOGGER.info(String.format("Timer.save(): Updating existing record: %s", persistedData.toString()));
             persistedData.copyValues(requestData);
+            LOGGER.info(String.format("Timer.save(): Updated existing record: %s", persistedData.toString()));
         } else {
-            LOGGER.info(String.format("Timer.save(): Saving new record: %s", requestData.toString()));
             JPA.em().merge(requestData);
+            LOGGER.info(String.format("Timer.save(): Saved new record: %s", requestData.toString()));
         }
 
         return redirect(routes.Timer.list());
@@ -112,8 +104,8 @@ public class Timer extends Controller {
         TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
         TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
         if (persistedData != null) {
-            LOGGER.info(String.format("Timer.delete(): Deleting existing record: %s", persistedData.toString()));
             JPA.em().remove(persistedData);
+            LOGGER.info(String.format("Timer.delete(): Deleted existing record: %s", persistedData.toString()));
         }
 
         return redirect(routes.Timer.list());
