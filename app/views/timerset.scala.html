@@ -1,32 +1,42 @@
 @(settingForm: Form[TimerSetting])
-@main(if(settingForm("id").value == "0") { "New departure time" } else { "Edit departure time" }) {
+@main(if(settingForm("id").value == 0) { "New departure time" } else { "Edit departure time" }) {
     @helper.form(action = routes.Timer.save(), 'id -> "saveitemform") {
         <input type='hidden' name='id' value='@settingForm("id").value' />
 
-        <div class='heater'>
-            @helper.inputText(settingForm("heater"), 'class -> "heater")
+        <div class='heaterfield'>
+            <button type='button' onclick='utils.incrementValue("heater", 1, 1, 2)'>+1</button>
+            @helper.input(settingForm("heater"), 'class -> "heaternumber" ) { (id, name, value, args) =>
+            <input type='number' name='@name' id='@id' value=@value @toHtmlArgs(args) />
+            }
+            <button type='button' onclick='utils.decrementValue("heater", 1, 1, 2)'>-1</button>
         </div>
 
-        <div class='hour'>
-            <button type='button' onclick='utils.incrementValue("hour", 1, 0, 23) '>+1</button>
+        <div class='labelfield'>
+            @helper.inputText(settingForm("label"), 'class -> "label")
+        </div>
+
+        <div class='hourfield'>
+            <button type='button' onclick='utils.incrementValue("hour", 1, 0, 23)'>+1</button>
             @helper.input(settingForm("hour"), 'class -> "hour", 'size -> "2", 'maxlength -> "2" ) { (id, name, value, args) =>
             <input type='number' name='@name' id='@id' value=@value @toHtmlArgs(args)>
             }
-            <button type='button' onclick='utils.decrementValue("hour", 1, 0, 23) '>-1</button>
+            <button type='button' onclick='utils.decrementValue("hour", 1, 0, 23)'>-1</button>
         </div>
 
-        <div class='minute'>
-            <button type='button' onclick='utils.incrementValue("minute", 10, 0, 59) '>+10</button>
-            <button type='button' onclick='utils.incrementValue("minute", 1, 0, 59) '>+1</button>
+        <div class='minutefield'>
+            <button type='button' onclick='utils.incrementValue("minute", 10, 0, 59)'>+10</button>
+            <button type='button' onclick='utils.incrementValue("minute", 1, 0, 59)'>+1</button>
             @helper.input(settingForm("minute"), 'class -> "minute", 'size -> "2", 'maxlength -> "2" ) { (id, name, value, args) =>
             <input type='number' name='@name' id='@id' value=@value @toHtmlArgs(args)>
             }
-            <button type='button' onclick='utils.decrementValue("minute", 10, 0, 59) '>-10</button>
-            <button type='button' onclick='utils.decrementValue("minute", 1, 0, 59) '>-1</button>
+            <button type='button' onclick='utils.decrementValue("minute", 10, 0, 59)'>-10</button>
+            <button type='button' onclick='utils.decrementValue("minute", 1, 0, 59)'>-1</button>
         </div>
 
-        <div class='days'>
-            @helper.inputText(settingForm("days"), 'class -> "days")
+        <div class='daysfield'>
+            @for(day <- java.time.DayOfWeek.values()) {
+            <input type='checkbox' name='days[]' value=@day.getValue() @if(settingForm("days").value.contains(day.getValue().toString())) {checked}>@day.getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.getDefault())</input>
+            }
         </div>
     }
 

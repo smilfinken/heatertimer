@@ -3,16 +3,16 @@ package controllers;
 import models.TimerSetting;
 import views.html.*;
 
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
+import java.util.ArrayList;
 
 import play.data.Form;
+import play.data.DynamicForm;
 import play.db.jpa.Transactional;
 import play.db.jpa.JPA;
 import play.mvc.Controller;
@@ -25,39 +25,46 @@ import play.libs.Json;
 import static play.libs.Json.*;
 
 public class Timer extends Controller {
-    private static final Logger LOGGER = Logger.getLogger(Timer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger("GLOBAL");
 
     @Transactional
     public Result set() {
-        LOGGER.info("set timer api called");
+        LOGGER.info("Timer.set(): set timer api called");
 
         JsonNode json = request().body().asJson();
-        if(json == null) {
-            LOGGER.warning("Error parsing json data");
+        if (json == null) {
+            LOGGER.warning("Timer.set(): Error parsing json data");
             return badRequest("Error parsing data, record not stored.");
         } else {
             try {
-                String heater = json.findPath("heater").textValue();
+                int heater = json.findPath("heater").intValue();
+                String label = json.findPath("label").textValue();
                 int hour = json.findPath("hour").intValue();
                 int minute = json.findPath("minute").intValue();
-                String days = json.findPath("days").textValue();
+                String dayString = json.findPath("days").textValue();
 
-                Query query = JPA.em().createQuery("select ts from TimerSetting ts where ts.heater = :heater");
+                // TODO: change set to just insert and create update method
+                Query query = JPA.em().createQuery("SELECT ts FROM TimerSetting ts WHERE ts.heater = :heater");
                 query.setMaxResults(1);
                 query.setParameter("heater", heater);
-                List<TimerSetting> timerSettings = (List<TimerSetting>) query.getResultList();
+                ArrayList<TimerSetting> timerSettings = (ArrayList<TimerSetting>) query.getResultList();
                 if (timerSettings.isEmpty()) {
-                    TimerSetting timerSetting = new models.TimerSetting(heater, hour, minute, days);
+                    ArrayList<Integer> days = new ArrayList<>();
+                    for (int i = 0; i < dayString.length(); i++) {
+                        try {
+                            days.add(Integer.parseInt(dayString.substring(i, i + 1)));
+                        } catch (Exception e) {}
+                    }
+                    TimerSetting timerSetting = new models.TimerSetting(heater, label, hour, minute, days);
                     JPA.em().persist(timerSetting);
                 } else {
                     TimerSetting timerSetting = timerSettings.get(0);
                     timerSetting.hour = hour;
                     timerSetting.minute = minute;
-                    timerSetting.days = days;
                     JPA.em().persist(timerSetting);
                 }
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Exception occurred while processing json data", e);
+                LOGGER.log(Level.SEVERE, "Timer.set(): Exception occurred while processing json data", e);
                 return badRequest("Error processing data, record not stored.");
             }
         }
@@ -65,19 +72,22 @@ public class Timer extends Controller {
         return ok();
     }
 
-
     @Transactional
     public Result edit() {
         Form<TimerSetting> settingForm = Form.form(TimerSetting.class);
         TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
         TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
+        //TimerSetting actualData;
         if (persistedData != null) {
-            LOGGER.info("Editing existing record.");
+            LOGGER.info("Timer.edit(): Editing existing record.");
+            //actualData = persistedData;
             settingForm = settingForm.fill(persistedData);
         } else {
-            LOGGER.info("Creating new record.");
+            LOGGER.info("Timer.edit(): Creating new record.");
+            //actualData = requestData;
             settingForm = settingForm.fill(requestData);
         }
+        //settingForm = settingForm.fill(actualData);
 
         return ok(timerset.render(settingForm));
     }
@@ -87,11 +97,11 @@ public class Timer extends Controller {
         TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
         TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
         if (persistedData != null) {
-            LOGGER.info("Updating existing record.");
+            LOGGER.info(String.format("Timer.save(): Updating existing record: %s", persistedData.toString()));
             persistedData.copyValues(requestData);
         } else {
-            LOGGER.info("Saving new record.");
-            JPA.em().persist(requestData);
+            LOGGER.info(String.format("Timer.save(): Saving new record: %s", requestData.toString()));
+            JPA.em().merge(requestData);
         }
 
         return redirect(routes.Timer.list());
@@ -102,7 +112,7 @@ public class Timer extends Controller {
         TimerSetting requestData = Form.form(TimerSetting.class).bindFromRequest().get();
         TimerSetting persistedData = JPA.em().find(TimerSetting.class, requestData.id);
         if (persistedData != null) {
-            LOGGER.info("Deleting existing record.");
+            LOGGER.info(String.format("Timer.delete(): Deleting existing record: %s", persistedData.toString()));
             JPA.em().remove(persistedData);
         }
 
@@ -111,7 +121,7 @@ public class Timer extends Controller {
 
     @Transactional(readOnly = true)
     public Result list() {
-        List<TimerSetting> timerSettings = (List<TimerSetting>) JPA.em().createQuery("select ts from TimerSetting ts").getResultList();
+        ArrayList<TimerSetting> timerSettings = (ArrayList<TimerSetting>) JPA.em().createQuery("SELECT ts FROM TimerSetting ts ORDER BY heater DESC").getResultList();
         return ok(timerlist.render(timerSettings));
     }
 }

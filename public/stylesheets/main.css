@@ -42,6 +42,7 @@ body {
 .pressure { text-align: left; width: 15%; }
 .timestamp { text-align: left; width: 25%; }
 
-.heater { text-align: left; width: 15%; }
+.heater { text-align: left; width: 5%; }
+.label { text-align: left; width: 20%; }
 .departuretime { text-align: left; width: 25%; }
-.days { text-align: left; width: 60%; }
+.days { text-align: left; width: 50%; }

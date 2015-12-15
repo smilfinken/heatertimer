@@ -1,11 +1,15 @@
 package models;
 
+import java.util.logging.Logger;
 import java.util.Date;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "sensorreadings")
 public class SensorReading {
+    private static final Logger LOGGER = Logger.getLogger("GLOBAL");
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     public long id;

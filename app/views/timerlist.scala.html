@@ -17,6 +17,7 @@
                 <thead>
                     <tr>
                         <th class='heater'>Heater</th>
+                        <th class='label'>Label</th>
                         <th class='departuretime'>Departure</th>
                         <th class='days'>Days</th>
                     </tr>
@@ -25,8 +26,9 @@
                     @for(setting <- settings) {
                     <tr class='timersetting' id='row_@setting.id' onclick='itemClicked(@setting.id)'>
                         <td>@setting.heater</td>
-                        <td>@setting.getDepartureTime()</td>
-                        <td>@for(day <- setting.getDisplayDays()) { @day }</td>
+                        <td>@setting.label</td>
+                        <td>@setting.getDepartureString()</td>
+                        <td>@setting.getDisplayDays()</td>
                     </tr>
                 }
                 </tbody>
