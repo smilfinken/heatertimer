@@ -1,5 +1,6 @@
 package controllers;
 
+import common.JsonCreator;
 import models.SensorReading;
 import models.TimerSetting;
 
@@ -16,10 +17,8 @@ import play.db.jpa.Transactional;
 import play.db.jpa.JPA;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import play.libs.Json;
-import play.libs.Json.*;
 
 public class Listener extends Controller {
     private static final Logger LOGGER = Logger.getLogger("GLOBAL");
@@ -32,7 +31,8 @@ public class Listener extends Controller {
             return badRequest("Error parsing data");
         } else {
             try {
-                ObjectNode response = Json.newObject();
+                JsonNodeFactory jsonNodeFactory = new JsonNodeFactory(false);
+                JsonNode response = (JsonNode)jsonNodeFactory.objectNode();
 
                 if (json.findPath("sensorStatus").textValue().toUpperCase().equals("OK")) {
                     String sensorId = json.findPath("sensorId").textValue();
@@ -44,15 +44,9 @@ public class Listener extends Controller {
                     JPA.em().persist(reading);
 
                     boolean[] relayStatus = getNewRelayStatusList();
-                    LOGGER.info(String.format("Listener.checkin(): new relay status = %s", relayStatus));
 
-                    if (temperature > 23.5) {
-                        response.put("action", "off");
-                    } else {
-                        response.put("action", "on");
-                    }
-                } else {
-                    response.put("action", "none");
+                    JsonCreator jsonCreator = new JsonCreator();
+                    response = jsonCreator.createCheckinResponse(relayStatus);
                 }
 
                 return ok(response);
