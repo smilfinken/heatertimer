@@ -2,7 +2,7 @@
  * system config
  */
 
-#define NODEBUG
+#define DEBUG
 //SYSTEM_THREAD(ENABLED);
 
 
@@ -94,18 +94,20 @@ char sensorStatus[32] = "";
  */
 
 void setRelay(int relay, bool on) {
-    #ifdef DEBUG
+#ifdef DEBUG
     Serial.printf("relay %d going %s\n", relay, on ? "ON" : "OFF");
-    #endif
+#endif
+
     if (relay <= (sizeof(RELAYS)/sizeof(int))) {
         digitalWrite(RELAYS[relay - 1], on ? RELAY_ON : RELAY_OFF);
     }
 }
 
 void initRelays() {
-    #ifdef DEBUG
+#ifdef DEBUG
     Serial.printf("init relays: %d %d\n", sizeof(RELAYS), sizeof(int));
-    #endif
+#endif
+
     for (int i = 0; i < (sizeof(RELAYS)/sizeof(int)); i++) {
         pinMode(RELAYS[i], OUTPUT);
         setRelay(i, SIGNAL_OFF);
@@ -113,9 +115,10 @@ void initRelays() {
 }
 
 void setPowerLED(int red, int green, int blue) {
-    #ifdef DEBUG
+#ifdef DEBUG
     Serial.printf("setting LED to %d %d %d\n", red, green, blue);
-    #endif
+#endif
+
     analogWrite(POWERPIN_R, red);
     analogWrite(POWERPIN_G, green);
     analogWrite(POWERPIN_B, blue);
@@ -142,25 +145,20 @@ void setStatusConnecting() {
     setPowerLED(155, 165, 0); // kinda orange
 }
 
-void performAction(const char* action, const char*arguments) {
-    #ifdef DEBUG
-    Serial.printf("performing action '%s' with arguments '%s'\n", action, arguments);
-    #endif
+bool performAction(ArduinoJson::JsonObject& action) {
+    bool result = false;
     
-    // TODO: split arguments
-    if (!strcmp(action, "on")) {
-        setRelay(1, SIGNAL_ON);
-        setRelay(2, SIGNAL_ON);
-    } else if (!strcmp(action, "off")) {
-        setRelay(1, SIGNAL_OFF);
-        setRelay(2, SIGNAL_OFF);
-    } else {
-        setStatusError();
-    }
-}
+    const char* state = action["action"];
+    const int target = sprintf("%d", action["target"]);
+#ifdef DEBUG
+    Serial.printf("setting state '%s' on target '%d'\n", state, target);
+#endif
+        
+    bool signal = !strcmp(state, "on") ? SIGNAL_ON : SIGNAL_OFF;
+    setRelay(target, signal);
+    result = true;
 
-void performAction(ArduinoJson::JsonObject& action) {
-    performAction(action["action"], action["arguments"]);
+    return result;
 }
 
 void getTemperature() {
@@ -247,15 +245,13 @@ void callServer() {
             if (jsonResponse["actions"].is<JsonArray&>())
             {
                 const char* array = jsonResponse["actions"];
-                #ifdef DEBUG
+#ifdef DEBUG
                 Serial.printf("actions = '%s'\n", array);
-                #endif
+#endif
                 JsonArray& actions = jsonBuffer.parseArray(const_cast<char*>(array));
                 for (int i = 0; i < actions.size(); i++) {
                     performAction(actions[i]);
                 }
-            } else {
-                performAction(jsonResponse["action"], jsonResponse["arguments"]);
             }
         } else {
             setStatusError();    
@@ -269,9 +265,9 @@ void callServer() {
  */
  
 void setup() {
-    #ifdef DEBUG
+#ifdef DEBUG
     Serial.begin(9600);
-    #endif
+#endif
  
     // get device ID
     strcpy(deviceId, System.deviceID());
