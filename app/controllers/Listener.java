@@ -40,6 +40,9 @@ public class Listener extends Controller {
                     double humidity = json.findPath("currentHumidity").doubleValue();
                     double pressure = json.findPath("currentAirPressure").doubleValue();
 
+                    int wifiSignal = json.findPath("wifiSignal").intValue();
+                    LOGGER.info(String.format("Listener.checkin(): WiFi signal strength = %d dB", wifiSignal));
+
                     SensorReading reading = new SensorReading(sensorId, temperature, humidity, pressure);
                     JPA.em().persist(reading);
 
