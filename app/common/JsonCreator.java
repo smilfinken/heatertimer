@@ -17,7 +17,7 @@ public class JsonCreator {
         int i = 1;
         for (boolean status : relayStatus) {
             ObjectNode action = nodeFactory.objectNode();
-            action.put("action", String.format("%d, %s", i, relayStatus[i - 1] ? "on" : "off");
+            action.put("action", String.format("%d, %s", i, relayStatus[i - 1] ? "on" : "off"));
             actions.add(action);
             i++;
         }
