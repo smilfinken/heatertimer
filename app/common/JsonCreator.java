@@ -14,12 +14,12 @@ public class JsonCreator {
 
         ArrayList<ObjectNode> actionList = new ArrayList<>();
         ArrayNode actions = nodeFactory.arrayNode();
-        int i = 0;
+        int i = 1;
         for (boolean status : relayStatus) {
             ObjectNode action = nodeFactory.objectNode();
-            action.put("action", relayStatus[i++] ? "on" : "off");
-            action.put("target", i);
+            action.put("action", String.format("%d, %s", i, relayStatus[i - 1] ? "on" : "off");
             actions.add(action);
+            i++;
         }
         result.put("actions", actions);
 
