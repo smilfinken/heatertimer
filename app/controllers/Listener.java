@@ -4,10 +4,10 @@ import common.JsonCreator;
 import models.SensorReading;
 import models.TimerSetting;
 
-import java.util.Calendar;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.List;
+import java.util.Calendar;
 import java.util.Date;
 
 import play.mvc.BodyParser;
