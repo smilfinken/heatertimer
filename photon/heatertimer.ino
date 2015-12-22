@@ -104,21 +104,13 @@ void setRelay(int relay, bool on) {
 }
 
 void initRelays() {
-#ifdef DEBUG
-    Serial.printf("init relays: %d %d\n", sizeof(RELAYS), sizeof(int));
-#endif
-
     for (int i = 0; i < (sizeof(RELAYS)/sizeof(int)); i++) {
         pinMode(RELAYS[i], OUTPUT);
-        setRelay(i, SIGNAL_OFF);
+        setRelay(i + 1, SIGNAL_OFF);
     }
 }
 
 void setPowerLED(int red, int green, int blue) {
-#ifdef DEBUG
-    Serial.printf("setting LED to %d %d %d\n", red, green, blue);
-#endif
-
     analogWrite(POWERPIN_R, red);
     analogWrite(POWERPIN_G, green);
     analogWrite(POWERPIN_B, blue);
@@ -137,7 +129,10 @@ void setStatusOK() {
     setPowerLED(0, 255, 0); // green
 }
 
-void setStatusError() {
+void setStatusError(char* message) {
+#ifdef DEBUG
+    Serial.printf("%s\n", message);
+#endif
     setPowerLED(255, 0, 0); // red
 }
 
@@ -149,7 +144,7 @@ bool performAction(ArduinoJson::JsonObject& action) {
     bool result = false;
     
     const char* state = action["action"];
-    const int target = sprintf("%d", action["target"]);
+    const int target = atoi(action["target"]);
 #ifdef DEBUG
     Serial.printf("setting state '%s' on target '%d'\n", state, target);
 #endif
@@ -205,56 +200,69 @@ void getAirPressure() {
 }
 
 void callServer() {
-    setStatusConnecting();
-
-    http_request_t request;
-    request.hostname = SERVICE_HOST;
-    request.port = SERVICE_PORT;
-    request.path = SERVICE_PATH;
-
-    // request body using sparkjson lib
-    StaticJsonBuffer<400> jsonBuffer;
-    JsonObject& jsonBody = jsonBuffer.createObject();
-  
-    jsonBody["sensorId"] = deviceId;
-    jsonBody["sensorStatus"] = sensorStatus;
-    jsonBody["currentTemp"] = currentTemp;
-    jsonBody["currentHumidity"] = currentHumidity;
-    jsonBody["currentAirPressure"] = currentAirPressure;
-    
-    char requestBody[400];
-    jsonBody.printTo(requestBody, sizeof(requestBody));
-    request.body = requestBody;
-  
-    http_header_t headers[] = {
-        { "Content-Type", "application/json" },
-        //{ "Accept" , "*/*" },
-        { NULL, NULL } // NOTE: Always terminate headers will NULL
-    };
-    http_response_t response;
-    
     if (WiFi.ready()) {
+        setStatusConnecting();
+      
+        http_request_t request;
+        request.hostname = SERVICE_HOST;
+        request.port = SERVICE_PORT;
+        request.path = SERVICE_PATH;
+    
+        // request body using sparkjson lib
+        StaticJsonBuffer<480> jsonBuffer;
+        JsonObject& jsonBody = jsonBuffer.createObject();
+      
+        jsonBody["sensorId"] = deviceId;
+        jsonBody["sensorStatus"] = sensorStatus;
+        jsonBody["currentTemp"] = currentTemp;
+        jsonBody["currentHumidity"] = currentHumidity;
+        jsonBody["currentAirPressure"] = currentAirPressure;
+        jsonBody["wifiSignal"] = WiFi.RSSI();
+        
+        char requestBody[480];
+        jsonBody.printTo(requestBody, sizeof(requestBody));
+        request.body = requestBody;
+    
+#ifdef DEBUG
+        Serial.printf("signal strength = %d dB\n", WiFi.RSSI());
+#endif
+        http_header_t headers[] = {
+            { "Content-Type", "application/json" },
+            { "Accept" , "application/json" },
+            { NULL, NULL } // NOTE: Always terminate headers with NULL
+        };
+        http_response_t response;
+        
         HttpClient http;
         http.post(request, response, headers);
         
-        char responseBody[200];
-        response.body.toCharArray(responseBody, 200);
+        char responseBody[480];
+        strcpy(responseBody, response.body);
+#ifdef DEBUG
+        Serial.printf("response body = %s\n", responseBody);
+#endif
         JsonObject& jsonResponse = jsonBuffer.parseObject(responseBody);
         if (jsonResponse.success()) {
             setStatusOK();
             if (jsonResponse["actions"].is<JsonArray&>())
             {
-                const char* array = jsonResponse["actions"];
-#ifdef DEBUG
-                Serial.printf("actions = '%s'\n", array);
-#endif
-                JsonArray& actions = jsonBuffer.parseArray(const_cast<char*>(array));
+                JsonArray& actions = jsonResponse["actions"].asArray();
                 for (int i = 0; i < actions.size(); i++) {
-                    performAction(actions[i]);
+                    char commandString[64];
+                    strcpy(commandString, actions[i]);
+#ifdef DEBUG
+                    Serial.printf("commandString = %s\n", commandString);
+#endif
+                    JsonObject& command = jsonBuffer.parseObject(commandString);
+                    if (command.success()) {
+                        performAction(command);
+                    } else {
+                        setStatusError("error parsing command");
+                    }
                 }
             }
         } else {
-            setStatusError();    
+            setStatusError("error parsing response");
         }
     }
 }
@@ -268,7 +276,10 @@ void setup() {
 #ifdef DEBUG
     Serial.begin(9600);
 #endif
- 
+
+    // select external antenna
+    WiFi.selectAntenna(ANT_EXTERNAL);
+
     // get device ID
     strcpy(deviceId, System.deviceID());
     
