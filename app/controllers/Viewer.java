@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Configuration;
 import models.SensorReading;
 import views.html.*;
 
@@ -16,7 +17,9 @@ public class Viewer extends Controller {
 
     @Transactional(readOnly = true)
     public Result list() {
+        List<Configuration> config = JPA.em().createQuery("SELECT c FROM Configuration c", Configuration.class).getResultList();
+
         List<SensorReading> readings = JPA.em().createQuery("SELECT sr FROM SensorReading sr ORDER BY timestamp ASC", SensorReading.class).getResultList();
-        return ok(readinglist.render(readings));
+        return ok(readinglist.render(readings, config));
     }
 }

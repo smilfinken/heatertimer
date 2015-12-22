@@ -5,8 +5,8 @@ import java.util.logging.ConsoleHandler;
 
 import views.html.*;
 
-import play.*;
-import play.mvc.*;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 public class Application extends Controller {
     private static final Logger LOGGER = Logger.getLogger("GLOBAL");

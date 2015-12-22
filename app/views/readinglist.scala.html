@@ -1,4 +1,4 @@
-@(readings: List[SensorReading])
+@(readings: List[SensorReading])(configList: List[Configuration])
 @main("Sensor readings") {
             <table class='fixed-table sensorreadings'>
                 <thead>
@@ -21,5 +21,14 @@
                     </tr>
                     }
                 </tbody>
+            </table>
+
+            <table>
+                @for(config <- configList) {
+                <tr>
+                    <td>@config.key</td>
+                    <td>@config.getValue(new Integer(0))</td>
+                </tr>
+                }
             </table>
 }

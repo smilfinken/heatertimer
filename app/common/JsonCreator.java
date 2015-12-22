@@ -29,7 +29,7 @@ public class JsonCreator {
             ObjectNode command = nodeFactory.objectNode();
             command.put("command", action.toString());
 
-            actions.add(command);
+            actions.add(action.toString());
             i++;
         }
         result.put("actions", actions);
