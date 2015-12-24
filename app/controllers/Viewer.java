@@ -19,7 +19,7 @@ public class Viewer extends Controller {
     public Result list() {
         List<Configuration> config = JPA.em().createQuery("SELECT c FROM Configuration c", Configuration.class).getResultList();
 
-        List<SensorReading> readings = JPA.em().createQuery("SELECT sr FROM SensorReading sr ORDER BY timestamp ASC", SensorReading.class).getResultList();
+        List<SensorReading> readings = JPA.em().createQuery("SELECT sr FROM SensorReading sr ORDER BY timestamp DESC", SensorReading.class).setMaxResults(24).getResultList();
         return ok(readinglist.render(readings, config));
     }
 }
