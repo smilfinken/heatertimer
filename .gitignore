@@ -11,3 +11,4 @@ test-result
 *.iml
 .cache
 .history
+RUNNING_PID

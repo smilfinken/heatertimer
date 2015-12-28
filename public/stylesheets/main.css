@@ -46,3 +46,23 @@ body {
 .label { text-align: left; width: 20%; }
 .departuretime { text-align: left; width: 25%; }
 .days { text-align: left; width: 50%; }
+
+/* index page */
+.temperatureContainer, .scheduleContainer {
+    display: block;
+	border-color: #61e81e;
+	border-size: 1px;
+	border-radius: 6px;
+}
+
+.header {
+    display: block;
+}
+
+.label {
+    margin-left: 1em;
+}
+
+.value {
+    margin-left: 0.2em;
+}

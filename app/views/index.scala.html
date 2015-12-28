@@ -1,3 +1,16 @@
+@(lastHourAverageTemperature: Double)(lastDayAverageTemperature: Double)(lastWeekAverageTemperature: Double)
 @main("Heater Timer") {
-    <h2>Choose from the menu to the left</h2>
+    <span class='temperatureContainer'>
+        <span class='header'>Average temperatures</span>
+        <span class='label'>1h</span><span class='value'>@lastHourAverageTemperature degC</span>
+        <span class='label'>24h</span><span class='value'>@lastDayAverageTemperature degC</span>
+        <span class='label'>7d</span><span class='value'>@lastWeekAverageTemperature degC</span>
+    </span>
+<!--
+    <span class='scheduleContainer'>
+        <span class='header'>Next activation</span>
+        <span class='label'>Timer 1</span><span class='value'>2015-12-31 12:59</span>
+        <span class='label'>Timer 2</span><span class='value'>2015-12-31 12:59</span>
+    </span>
+-->
 }

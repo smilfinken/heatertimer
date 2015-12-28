@@ -4,11 +4,9 @@
         <input type='hidden' name='id' value='@settingForm("id").value' />
 
         <div class='heaterfield'>
-            <button type='button' onclick='utils.incrementValue("heater", 1, 1, 2)'>+1</button>
             @helper.input(settingForm("heater"), 'class -> "heaternumber" ) { (id, name, value, args) =>
             <input type='number' name='@name' id='@id' value=@value @toHtmlArgs(args) />
             }
-            <button type='button' onclick='utils.decrementValue("heater", 1, 1, 2)'>-1</button>
         </div>
 
         <div class='labelfield'>
@@ -35,7 +33,11 @@
 
         <div class='daysfield'>
             @for(day <- java.time.DayOfWeek.values()) {
-            <input type='checkbox' name='days[]' value=@day.getValue() @if(settingForm("days").value.contains(day.getValue().toString())) {checked}>@day.getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.getDefault())</input>
+            <label class='switch switch-flat'>
+                <input class='switch-input' type='checkbox' name='days[]' value=@day.getValue() @if(settingForm("days").value.contains(day.getValue().toString())) {checked} />
+                <span class='switch-label' data-dayOfWeek='@day.getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.getDefault())'></span>
+                <span class='switch-handle'></span>
+            </label>
             }
         </div>
     }
