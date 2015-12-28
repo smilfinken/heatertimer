@@ -1,10 +1,11 @@
 @(lastHourAverageTemperature: Double)(lastDayAverageTemperature: Double)(lastWeekAverageTemperature: Double)
+@formatValue(value: Double) = @{ val result = String.format("%.1f", value); result; }
 @main("Heater Timer") {
     <span class='temperatureContainer'>
         <span class='header'>Average temperatures</span>
-        <span class='label'>1h</span><span class='value'>@lastHourAverageTemperature degC</span>
-        <span class='label'>24h</span><span class='value'>@lastDayAverageTemperature degC</span>
-        <span class='label'>7d</span><span class='value'>@lastWeekAverageTemperature degC</span>
+        <span class='label'>1h</span><span class='value'>@formatValue(lastHourAverageTemperature) degC</span>
+        <span class='label'>24h</span><span class='value'>@formatValue(lastDayAverageTemperature) degC</span>
+        <span class='label'>7d</span><span class='value'>@formatValue(lastWeekAverageTemperature) degC</span>
     </span>
 <!--
     <span class='scheduleContainer'>
