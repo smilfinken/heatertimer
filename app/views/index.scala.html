@@ -2,7 +2,7 @@
 @import play.i18n._
 @formatTemperature(value: Double) = @{ val result = String.format("%3.1f", value); result; }
 @formatHumidity(value: Double) = @{ val result = String.format("%2.1f", value); result; }
-@formatPressure(value: Double) = @{ val result = String.format("%6.1f", value); result; }
+@formatPressure(value: Double) = @{ val result = String.format("%6.0f", value); result; }
 @main(Html(Messages.get("title.main"))) {
     <span class='sensorReadingContainer'>
         <span class='header'>@Html(Messages.get("heading.averagetemp"))</span>
