@@ -75,9 +75,6 @@ const char SERVICE_PATH[] = "/api/checkin";
 SparkCorePolledTimer callServerTimer(CHECKIN_INTERVAL);
 SparkCorePolledTimer getTemperatureTimer(SENSOR_INTERVAL);
 SparkCorePolledTimer getAirPressureTimer(SENSOR_INTERVAL);
-//Timer callServerTimer(CHECKIN_INTERVAL, callServer);
-//Timer getTemperatureTimer(SENSOR_INTERVAL, getTemperature);
-
 
 /*
  * declarations for current state
@@ -131,7 +128,7 @@ void setStatusOK() {
 
 void setStatusError(char* message) {
 #ifdef DEBUG
-    Serial.printf("%s\n", message);
+    Serial.printf("error message = %s\n", message);
 #endif
     setPowerLED(255, 0, 0); // red
 }
@@ -145,11 +142,11 @@ bool performAction(ArduinoJson::JsonObject& action) {
     
     const char* state = action["action"];
     const int target = atoi(action["target"]);
+    bool signal = !strcmp(state, "on") ? SIGNAL_ON : SIGNAL_OFF;
+
 #ifdef DEBUG
     Serial.printf("setting state '%s' on target '%d'\n", state, target);
 #endif
-        
-    bool signal = !strcmp(state, "on") ? SIGNAL_ON : SIGNAL_OFF;
     setRelay(target, signal);
     result = true;
 
@@ -164,7 +161,6 @@ void getTemperature() {
     switch (result) {
         case DHTLIB_OK:
             strcpy(sensorStatus, "OK");
-            
             currentTemp = DHT.getCelsius();
             currentHumidity = DHT.getHumidity();
             break;
@@ -241,6 +237,7 @@ void callServer() {
 #ifdef DEBUG
         Serial.printf("response body = %s\n", responseBody);
 #endif
+
         JsonObject& jsonResponse = jsonBuffer.parseObject(responseBody);
         if (jsonResponse.success()) {
             setStatusOK();
@@ -276,7 +273,6 @@ void setup() {
 #ifdef DEBUG
     Serial.begin(9600);
 #endif
-
     // select external antenna
     WiFi.selectAntenna(ANT_EXTERNAL);
 
@@ -299,9 +295,6 @@ void setup() {
     // do one cycle at startup
     getTemperature();
     callServer();
-
-//    callServerTimer.start();
-//    getTemperatureTimer.start();
 }
 
 
