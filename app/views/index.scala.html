@@ -1,18 +1,48 @@
-@(lastHourAverageTemperature: Double)(lastDayAverageTemperature: Double)(lastWeekAverageTemperature: Double)
+@(lastHourAverageTemperature: Double)(lastDayAverageTemperature: Double)(lastWeekAverageTemperature: Double)(lastHourAverageHumidity: Double)(lastDayAverageHumidity: Double)(lastWeekAverageHumidity: Double)(lastHourAveragePressure: Double)(lastDayAveragePressure: Double)(lastWeekAveragePressure: Double)
 @import play.i18n._
-@formatTemperature(value: Double) = @{ val result = String.format("%.1f", value); result; }
+@formatTemperature(value: Double) = @{ val result = String.format("%3.1f", value); result; }
+@formatHumidity(value: Double) = @{ val result = String.format("%2.1f", value); result; }
+@formatPressure(value: Double) = @{ val result = String.format("%6.1f", value); result; }
 @main(Html(Messages.get("title.main"))) {
-    <span class='temperatureContainer'>
+    <span class='sensorReadingContainer'>
         <span class='header'>@Html(Messages.get("heading.averagetemp"))</span>
         <span class='values'>
             <span class='valueitem'>
-                <span class='label'>@Html(Messages.get("label.averages.1h"))</span><span class='value'>@formatTemperature(lastHourAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+                <span class='label'>@Html(Messages.get("label.averages.1h"))</span><span class='value'>@formatTemperature(lastHourAverageTemperature)@Html(Messages.get("unit.degrees.celsius"))</span>
             </span>
             <span class='valueitem'>
-                <span class='label'>@Html(Messages.get("label.averages.1d"))</span><span class='value'>@formatTemperature(lastDayAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+                <span class='label'>@Html(Messages.get("label.averages.1d"))</span><span class='value'>@formatTemperature(lastDayAverageTemperature)@Html(Messages.get("unit.degrees.celsius"))</span>
             </span>
             <span class='valueitem'>
-                <span class='label'>@Html(Messages.get("label.averages.1w"))</span><span class='value'>@formatTemperature(lastWeekAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+                <span class='label'>@Html(Messages.get("label.averages.1w"))</span><span class='value'>@formatTemperature(lastWeekAverageTemperature)@Html(Messages.get("unit.degrees.celsius"))</span>
+            </span>
+        </span>
+    </span>
+    <span class='sensorReadingContainer'>
+        <span class='header'>@Html(Messages.get("heading.averagehumidity"))</span>
+        <span class='values'>
+            <span class='valueitem'>
+                <span class='label'>@Html(Messages.get("label.averages.1h"))</span><span class='value'>@formatHumidity(lastHourAverageHumidity)@Html(Messages.get("unit.humidity.percent"))</span>
+            </span>
+            <span class='valueitem'>
+                <span class='label'>@Html(Messages.get("label.averages.1d"))</span><span class='value'>@formatHumidity(lastDayAverageHumidity)@Html(Messages.get("unit.humidity.percent"))</span>
+            </span>
+            <span class='valueitem'>
+                <span class='label'>@Html(Messages.get("label.averages.1w"))</span><span class='value'>@formatHumidity(lastWeekAverageHumidity)@Html(Messages.get("unit.humidity.percent"))</span>
+            </span>
+        </span>
+    </span>
+    <span class='sensorReadingContainer'>
+        <span class='header'>@Html(Messages.get("heading.averagepressure"))</span>
+        <span class='values'>
+            <span class='valueitem'>
+                <span class='label'>@Html(Messages.get("label.averages.1h"))</span><span class='value'>@formatPressure(lastHourAveragePressure)@Html(Messages.get("unit.pressure.pascal"))</span>
+            </span>
+            <span class='valueitem'>
+                <span class='label'>@Html(Messages.get("label.averages.1d"))</span><span class='value'>@formatPressure(lastDayAveragePressure)@Html(Messages.get("unit.pressure.pascal"))</span>
+            </span>
+            <span class='valueitem'>
+                <span class='label'>@Html(Messages.get("label.averages.1w"))</span><span class='value'>@formatPressure(lastWeekAveragePressure)@Html(Messages.get("unit.pressure.pascal"))</span>
             </span>
         </span>
     </span>

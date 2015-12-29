@@ -5,6 +5,8 @@ menu.action.readings=Sensor readings
 title.main=Heater Timer
 
 heading.averagetemp=Average temperatures
+heading.averagehumidity=Average humidity
+heading.averagepressure=Average atmospheric pressure
 heading.nextactivation=Next activation
 heading.sensorreadings=Sensor readings
 heading.timersettings=Timer settings
@@ -32,4 +34,6 @@ label.label=Label
 label.departuretime=Departure
 label.days=Days
 
-unit.degrees.celcius=&deg;C
+unit.degrees.celsius=&deg;C
+unit.humidity.percent=%
+unit.pressure.pascal=Pa

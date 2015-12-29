@@ -48,36 +48,39 @@ body {
 .fixed-table .days { text-align: left; width: 50%; }
 
 /* index page */
-.temperatureContainer, .scheduleContainer {
+.sensorReadingContainer, .scheduleContainer {
     display: block;
 	border-color: #61e81e;
 	border-size: 1px;
 	border-radius: 6px;
+    text-align: center;
 }
 
-.temperatureContainer .header {
+.sensorReadingContainer .header {
     display: block;
     width: 100%;
-    margin-top: 1em;
+    margin-top: 1.5em;
     text-align: center;
     font-size: xx-large;
 }
 
-.temperatureContainer .values {
+.sensorReadingContainer .values {
     display: flex;
-    width: 100%;
-    margin-top: 2em;
+    width: 50%;
+    margin-top: 1em;
+    margin-left: 25%;
+    margin-right: 25%;
 }
 
-.temperatureContainer .valueitem {
+.sensorReadingContainer .valueitem {
     width: 33%;
     text-align: center;
     font-size: x-large;
 }
 
-.temperatureContainer .label {
+.sensorReadingContainer .label {
 }
 
-.temperatureContainer .value {
+.sensorReadingContainer .value {
     margin-left: 0.2em;
 }

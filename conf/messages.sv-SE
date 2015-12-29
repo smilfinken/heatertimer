@@ -5,6 +5,8 @@ menu.action.readings=Sensoravl&auml;sningar
 title.main=Motorv&auml;rmartimer
 
 heading.averagetemp=Genomsnittlig temperatur
+heading.averagehumidity=Genomsnittlig luftfuktighet
+heading.averagepressure=Genomsnittligt lufttryck
 heading.nextactivation=N&auml;sta avg&aring;ngstid
 heading.sensorreadings=Sensoravl&auml;sningar
 heading.timersettings=Timerinst&auml;llningar
@@ -32,4 +34,6 @@ label.label=Beskrivning
 label.departuretime=Avg&aring;ng
 label.days=Dagar
 
-unit.degrees.celcius=&deg;C
+unit.degrees.celsius=&deg;C
+unit.humidity.percent=%
+unit.pressure.pascal=Pa
