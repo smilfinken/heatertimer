@@ -1,0 +1,34 @@
+menu.action.timers=Timers
+menu.action.readings=Sensor readings
+
+title.main=Heater Timer
+
+heading.averagetemp=Average temperatures
+heading.nextactivation=Next activation
+heading.sensorreadings=Sensor readings
+heading.timersettings=Timer settings
+heading.newdeparturetime=New departure time
+heading.editdeparturetime=Edit departure time
+
+label.averages.1h=1h
+label.averages.1d=24h
+label.averages.1w=7d
+
+label.input.heater=Heater
+label.input.hours=Hours
+label.input.label=Label
+label.input.minutes=Minutes
+
+label.timer=timer
+label.timer_index=timer {0}
+label.device=Sensor
+label.temperature=Temperature
+label.humidity=Humidity
+label.pressure=Pressure
+label.timestamp=Recorded
+label.heater=Heater
+label.label=Label
+label.departuretime=Departure
+label.days=Days
+
+unit.degrees.celcius=&deg;C

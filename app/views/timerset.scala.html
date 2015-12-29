@@ -1,21 +1,22 @@
 @(settingForm: Form[TimerSetting])
-@main(if(settingForm("id").value == "0") { "New departure time" } else { "Edit departure time" }) {
+@import play.i18n._
+@main(if(settingForm("id").value == "0") { Messages.get("heading.newdeparturetime") } else { Messages.get("heading.editdeparturetime") }) {
     @helper.form(action = routes.Timer.save(), 'id -> "saveitemform") {
         <input type='hidden' name='id' value='@settingForm("id").value' />
 
         <div class='heaterfield'>
-            @helper.input(settingForm("heater"), 'class -> "heaternumber" ) { (id, name, value, args) =>
+            @helper.input(settingForm("heater"), 'class -> "heaternumber", '_label -> Messages.get("label.input.heater") ) { (id, name, value, args) =>
             <input type='number' name='@name' id='@id' value=@value @toHtmlArgs(args) />
             }
         </div>
 
         <div class='labelfield'>
-            @helper.inputText(settingForm("label"), 'class -> "label")
+            @helper.inputText(settingForm("label"), 'class -> "label", '_label -> Messages.get("label.input.label"))
         </div>
 
         <div class='hourfield'>
             <button type='button' onclick='utils.incrementValue("hour", 1, 0, 23)'>+1</button>
-            @helper.input(settingForm("hour"), 'class -> "hour", 'size -> "2", 'maxlength -> "2" ) { (id, name, value, args) =>
+            @helper.input(settingForm("hour"), 'class -> "hour", 'size -> "2", 'maxlength -> "2", '_label -> Messages.get("label.input.hours") ) { (id, name, value, args) =>
             <input type='number' name='@name' id='@id' value=@value @toHtmlArgs(args)>
             }
             <button type='button' onclick='utils.decrementValue("hour", 1, 0, 23)'>-1</button>
@@ -24,7 +25,7 @@
         <div class='minutefield'>
             <button type='button' onclick='utils.incrementValue("minute", 10, 0, 59)'>+10</button>
             <button type='button' onclick='utils.incrementValue("minute", 1, 0, 59)'>+1</button>
-            @helper.input(settingForm("minute"), 'class -> "minute", 'size -> "2", 'maxlength -> "2" ) { (id, name, value, args) =>
+            @helper.input(settingForm("minute"), 'class -> "minute", 'size -> "2", 'maxlength -> "2", '_label -> Messages.get("label.input.minutes") ) { (id, name, value, args) =>
             <input type='number' name='@name' id='@id' value=@value @toHtmlArgs(args)>
             }
             <button type='button' onclick='utils.decrementValue("minute", 10, 0, 59)'>-10</button>

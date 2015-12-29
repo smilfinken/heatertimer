@@ -1,5 +1,6 @@
 @(settings: List[TimerSetting])
-@main("Timer settings") {
+@import play.i18n._
+@main(Messages.get("heading.timersettings")) {
             <script>
                 function itemClicked(id) {
                     if (utils.highlightSingleRow("row_" + id)) {
@@ -16,10 +17,10 @@
             <table class='fixed-table timersettings'>
                 <thead>
                     <tr>
-                        <th class='heater'>Heater</th>
-                        <th class='label'>Label</th>
-                        <th class='departuretime'>Departure</th>
-                        <th class='days'>Days</th>
+                        <th class='heater'>@Messages.get("label.heater")</th>
+                        <th class='label'>@Messages.get("label.label")</th>
+                        <th class='departuretime'>@Messages.get("label.departuretime")</th>
+                        <th class='days'>@Messages.get("label.days")</th>
                     </tr>
                 </thead>
                 <tbody>

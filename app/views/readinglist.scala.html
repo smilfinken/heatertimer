@@ -1,13 +1,14 @@
 @(readings: List[SensorReading])(configList: List[Configuration])
-@main("Sensor readings") {
+@import play.i18n._
+@main(Messages.get("heading.sensorreadings")) {
             <table class='fixed-table sensorreadings'>
                 <thead>
                     <tr>
-                        <th class='device'>Sensor</th>
-                        <th class='temperature'>Temperature</th>
-                        <th class='humidity'>Humidity</th>
-                        <th class='pressure'>Pressure</th>
-                        <th class='timestamp'>Recorded</th>
+                        <th class='device'>@Messages.get("label.device")</th>
+                        <th class='temperature'>@Messages.get("label.temperature")</th>
+                        <th class='humidity'>@Messages.get("label.humidity")</th>
+                        <th class='pressure'>@Messages.get("label.pressure")</th>
+                        <th class='timestamp'>@Messages.get("label.timestamp")</th>
                     </tr>
                 </thead>
                 <tbody>

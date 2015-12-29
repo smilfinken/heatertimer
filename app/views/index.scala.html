@@ -1,17 +1,18 @@
 @(lastHourAverageTemperature: Double)(lastDayAverageTemperature: Double)(lastWeekAverageTemperature: Double)
-@formatValue(value: Double) = @{ val result = String.format("%.1f", value); result; }
-@main("Heater Timer") {
+@import play.i18n._
+@formatTemperature(value: Double) = @{ val result = String.format("%.1f", value); result; }
+@main(Messages.get("title.main")) {
     <span class='temperatureContainer'>
-        <span class='header'>Average temperatures</span>
-        <span class='label'>1h</span><span class='value'>@formatValue(lastHourAverageTemperature) degC</span>
-        <span class='label'>24h</span><span class='value'>@formatValue(lastDayAverageTemperature) degC</span>
-        <span class='label'>7d</span><span class='value'>@formatValue(lastWeekAverageTemperature) degC</span>
+        <span class='header'>@Messages.get("heading.averagetemp")</span>
+        <span class='label'>@Messages.get("label.averages.1h")</span><span class='value'>@formatTemperature(lastHourAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+        <span class='label'>@Messages.get("label.averages.1d")</span><span class='value'>@formatTemperature(lastDayAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+        <span class='label'>@Messages.get("label.averages.1w")</span><span class='value'>@formatTemperature(lastWeekAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
     </span>
 <!--
     <span class='scheduleContainer'>
-        <span class='header'>Next activation</span>
-        <span class='label'>Timer 1</span><span class='value'>2015-12-31 12:59</span>
-        <span class='label'>Timer 2</span><span class='value'>2015-12-31 12:59</span>
+        <span class='header'>@Messages.get("heading.nextactivation")</span>
+        <span class='label'>@Messages.get("label.timer_index", "1")</span><span class='value'>2015-12-31 12:59</span>
+        <span class='label'>@Messages.get("label.timer_index", "2")</span><span class='value'>2015-12-31 12:59</span>
     </span>
 -->
 }
