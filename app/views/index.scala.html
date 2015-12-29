@@ -4,9 +4,17 @@
 @main(Html(Messages.get("title.main"))) {
     <span class='temperatureContainer'>
         <span class='header'>@Html(Messages.get("heading.averagetemp"))</span>
-        <span class='label'>@Html(Messages.get("label.averages.1h"))</span><span class='value'>@formatTemperature(lastHourAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
-        <span class='label'>@Html(Messages.get("label.averages.1d"))</span><span class='value'>@formatTemperature(lastDayAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
-        <span class='label'>@Html(Messages.get("label.averages.1w"))</span><span class='value'>@formatTemperature(lastWeekAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+        <span class='values'>
+            <span class='valueitem'>
+                <span class='label'>@Html(Messages.get("label.averages.1h"))</span><span class='value'>@formatTemperature(lastHourAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+            </span>
+            <span class='valueitem'>
+                <span class='label'>@Html(Messages.get("label.averages.1d"))</span><span class='value'>@formatTemperature(lastDayAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+            </span>
+            <span class='valueitem'>
+                <span class='label'>@Html(Messages.get("label.averages.1w"))</span><span class='value'>@formatTemperature(lastWeekAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+            </span>
+        </span>
     </span>
 <!--
     <span class='scheduleContainer'>

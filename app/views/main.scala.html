@@ -18,6 +18,7 @@
     </head>
     <body onLoad='menu.attachEvents()'>
         <nav class='menu' id='menu'>
+            <a href='/'>@Html(Messages.get("menu.action.main"))</a>
             <a href='/timers'>@Html(Messages.get("menu.action.timers"))</a>
             <a href='/readings'>@Html(Messages.get("menu.action.readings"))</a>
         </nav>

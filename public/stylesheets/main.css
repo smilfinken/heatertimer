@@ -13,7 +13,7 @@ body {
 /* table layout for lists */
 .fixed-table {
     table-layout: fixed;
-    width: auto;
+    width: 100%;
     margin: 0.5em;
     white-space: nowrap;
     border-collapse: collapse;
@@ -36,16 +36,16 @@ body {
 }
 
 /* Column widths are based on these cells */
-.device { text-align: left; width: 30%; }
-.temperature { text-align: left; width: 15%; }
-.humidity { text-align: left; width: 15%; }
-.pressure { text-align: left; width: 15%; }
-.timestamp { text-align: left; width: 25%; }
+.fixed-table .device { text-align: left; width: 25%; }
+.fixed-table .temperature { text-align: left; width: 13%; }
+.fixed-table .humidity { text-align: left; width: 13%; }
+.fixed-table .pressure { text-align: left; width: 13%; }
+.fixed-table .timestamp { text-align: left; width: 35%; }
 
-.heater { text-align: left; width: 5%; }
-.label { text-align: left; width: 20%; }
-.departuretime { text-align: left; width: 25%; }
-.days { text-align: left; width: 50%; }
+.fixed-table .heater { text-align: left; width: 10%; }
+.fixed-table .label { text-align: left; width: 20%; }
+.fixed-table .departuretime { text-align: left; width: 20%; }
+.fixed-table .days { text-align: left; width: 50%; }
 
 /* index page */
 .temperatureContainer, .scheduleContainer {
@@ -55,14 +55,29 @@ body {
 	border-radius: 6px;
 }
 
-.header {
+.temperatureContainer .header {
     display: block;
+    width: 100%;
+    margin-top: 1em;
+    text-align: center;
+    font-size: xx-large;
 }
 
-.label {
-    margin-left: 1em;
+.temperatureContainer .values {
+    display: flex;
+    width: 100%;
+    margin-top: 2em;
 }
 
-.value {
+.temperatureContainer .valueitem {
+    width: 33%;
+    text-align: center;
+    font-size: x-large;
+}
+
+.temperatureContainer .label {
+}
+
+.temperatureContainer .value {
     margin-left: 0.2em;
 }
