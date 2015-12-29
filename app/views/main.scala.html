@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: Html)(content: Html)
 @import play.i18n._
 <!DOCTYPE html>
 <html lang='en'>
@@ -18,8 +18,8 @@
     </head>
     <body onLoad='menu.attachEvents()'>
         <nav class='menu' id='menu'>
-            <a href='/timers'>@Messages.get("menu.action.timers")</a>
-            <a href='/readings'>@Messages.get("menu.action.readings")</a>
+            <a href='/timers'>@Html(Messages.get("menu.action.timers"))</a>
+            <a href='/readings'>@Html(Messages.get("menu.action.readings"))</a>
         </nav>
 
         <div class='toolbar'>

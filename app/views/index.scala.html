@@ -1,18 +1,18 @@
 @(lastHourAverageTemperature: Double)(lastDayAverageTemperature: Double)(lastWeekAverageTemperature: Double)
 @import play.i18n._
 @formatTemperature(value: Double) = @{ val result = String.format("%.1f", value); result; }
-@main(Messages.get("title.main")) {
+@main(Html(Messages.get("title.main"))) {
     <span class='temperatureContainer'>
-        <span class='header'>@Messages.get("heading.averagetemp")</span>
-        <span class='label'>@Messages.get("label.averages.1h")</span><span class='value'>@formatTemperature(lastHourAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
-        <span class='label'>@Messages.get("label.averages.1d")</span><span class='value'>@formatTemperature(lastDayAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
-        <span class='label'>@Messages.get("label.averages.1w")</span><span class='value'>@formatTemperature(lastWeekAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+        <span class='header'>@Html(Messages.get("heading.averagetemp"))</span>
+        <span class='label'>@Html(Messages.get("label.averages.1h"))</span><span class='value'>@formatTemperature(lastHourAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+        <span class='label'>@Html(Messages.get("label.averages.1d"))</span><span class='value'>@formatTemperature(lastDayAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
+        <span class='label'>@Html(Messages.get("label.averages.1w"))</span><span class='value'>@formatTemperature(lastWeekAverageTemperature)@Html(Messages.get("unit.degrees.celcius"))</span>
     </span>
 <!--
     <span class='scheduleContainer'>
-        <span class='header'>@Messages.get("heading.nextactivation")</span>
-        <span class='label'>@Messages.get("label.timer_index", "1")</span><span class='value'>2015-12-31 12:59</span>
-        <span class='label'>@Messages.get("label.timer_index", "2")</span><span class='value'>2015-12-31 12:59</span>
+        <span class='header'>@Html(Messages.get("heading.nextactivation"))</span>
+        <span class='label'>@Html(Messages.get("label.timer_index", "1"))</span><span class='value'>2015-12-31 12:59</span>
+        <span class='label'>@Html(Messages.get("label.timer_index", "2"))</span><span class='value'>2015-12-31 12:59</span>
     </span>
 -->
 }

@@ -1,0 +1,34 @@
+menu.action.timers=Timerinst&auml;llningar
+menu.action.readings=Sensoravl&auml;sningar
+
+title.main=Motorv&auml;rmartimer
+
+heading.averagetemp=Genomsnittlig temperatur
+heading.nextactivation=N&auml;sta avg&aring;ngstid
+heading.sensorreadings=Sensoravl&auml;sningar
+heading.timersettings=Timerinst&auml;llningar
+heading.newdeparturetime=Ny avg&aring;ngstid
+heading.editdeparturetime=&Auml;ndra avg&aring;ngstid
+
+label.averages.1h=1t
+label.averages.1d=24t
+label.averages.1w=7d
+
+label.input.heater=Motorv&auml;rmare
+label.input.hours=Timmar
+label.input.label=Beskrivning
+label.input.minutes=Minuter
+
+label.timer=timer
+label.timer_index=timer {0}
+label.device=Sensor
+label.temperature=Temperatur
+label.humidity=Luftfuktighet
+label.pressure=Lufttryck
+label.timestamp=Avl&auml;st
+label.heater=Motorv&auml;rmare
+label.label=Beskrivning
+label.departuretime=Avg&aring;ng
+label.days=Dagar
+
+unit.degrees.celcius=&deg;C

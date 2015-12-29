@@ -1,14 +1,14 @@
 @(readings: List[SensorReading])(configList: List[Configuration])
 @import play.i18n._
-@main(Messages.get("heading.sensorreadings")) {
+@main(Html(Messages.get("heading.sensorreadings"))) {
             <table class='fixed-table sensorreadings'>
                 <thead>
                     <tr>
-                        <th class='device'>@Messages.get("label.device")</th>
-                        <th class='temperature'>@Messages.get("label.temperature")</th>
-                        <th class='humidity'>@Messages.get("label.humidity")</th>
-                        <th class='pressure'>@Messages.get("label.pressure")</th>
-                        <th class='timestamp'>@Messages.get("label.timestamp")</th>
+                        <th class='device'>@Html(Messages.get("label.device"))</th>
+                        <th class='temperature'>@Html(Messages.get("label.temperature"))</th>
+                        <th class='humidity'>@Html(Messages.get("label.humidity"))</th>
+                        <th class='pressure'>@Html(Messages.get("label.pressure"))</th>
+                        <th class='timestamp'>@Html(Messages.get("label.timestamp"))</th>
                     </tr>
                 </thead>
                 <tbody>
