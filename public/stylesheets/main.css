@@ -37,14 +37,14 @@ body {
 
 /* Column widths are based on these cells */
 .fixed-table .device { text-align: left; width: 25%; }
-.fixed-table .temperature { text-align: left; width: 13%; }
-.fixed-table .humidity { text-align: left; width: 13%; }
-.fixed-table .pressure { text-align: left; width: 13%; }
+.fixed-table .temperature { text-align: left; width: auto; }
+.fixed-table .humidity { text-align: left; width: auto; }
+.fixed-table .pressure { text-align: left; width: auto; }
 .fixed-table .timestamp { text-align: left; width: 35%; }
 
-.fixed-table .heater { text-align: left; width: 10%; }
-.fixed-table .label { text-align: left; width: 20%; }
-.fixed-table .departuretime { text-align: left; width: 20%; }
+.fixed-table .heater { text-align: left; width: auto; }
+.fixed-table .label { text-align: left; width: auto; }
+.fixed-table .departuretime { text-align: left; width: auto; }
 .fixed-table .days { text-align: left; width: 50%; }
 
 /* index page */
