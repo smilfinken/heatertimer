@@ -10,7 +10,6 @@
 .switch-input {
     position: absolute;
     top: 0;
-    left: -100;
     opacity: 0;
 }
 .switch-label {
@@ -22,12 +21,11 @@
 }
 .switch-label:before, .switch-label:after {
     display: block;
-    position: relative;
     margin: 0.3em auto;
     width: 50%;
 }
 .switch-label:after {
-    margin-top: -1.5em;
+    margin-top: -1.4em;
 }
 .switch-label:before {
     content: attr(data-dayOfWeek);
@@ -39,7 +37,6 @@
     content: attr(data-dayOfWeek);
     color: #61e81e;
     opacity: 0;
-
 }
 .switch-input:checked ~ .switch-label:before {
     opacity: 0;
