@@ -36,4 +36,4 @@ label.days=Days
 
 unit.degrees.celsius=&deg;C
 unit.humidity.percent=%
-unit.pressure.pascal=Pa
+unit.pressure.pascal=kPa

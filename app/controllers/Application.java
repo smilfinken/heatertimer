@@ -4,7 +4,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.Arrays;
 
 import models.SensorReading;
 import views.html.*;
@@ -31,7 +31,7 @@ public class Application extends Controller {
         TypedQuery<Double> temperatureQuery = JPA.em().createQuery("SELECT AVG(sr.temperature) FROM SensorReading sr WHERE sr.timestamp > :starttime", Double.class);
         temperatureQuery.setParameter("starttime", startTime);
         try {
-            result = (Double) temperatureQuery.getSingleResult();
+            result = (Double)temperatureQuery.getSingleResult();
         } catch (Exception e) {
             LOGGER.warning(String.format("Application.index(): error getting average temperature: %s", e.toString()));
         }
@@ -46,7 +46,7 @@ public class Application extends Controller {
         TypedQuery<Double> temperatureQuery = JPA.em().createQuery("SELECT AVG(sr.humidity) FROM SensorReading sr WHERE sr.timestamp > :starttime", Double.class);
         temperatureQuery.setParameter("starttime", startTime);
         try {
-            result = (Double) temperatureQuery.getSingleResult();
+            result = (Double)temperatureQuery.getSingleResult();
         } catch (Exception e) {
             LOGGER.warning(String.format("Application.index(): error getting average humidity: %s", e.toString()));
         }
@@ -61,7 +61,7 @@ public class Application extends Controller {
         TypedQuery<Double> temperatureQuery = JPA.em().createQuery("SELECT AVG(sr.pressure) FROM SensorReading sr WHERE sr.timestamp > :starttime", Double.class);
         temperatureQuery.setParameter("starttime", startTime);
         try {
-            result = (Double) temperatureQuery.getSingleResult();
+            result = (Double)temperatureQuery.getSingleResult() / 1000;
         } catch (Exception e) {
             LOGGER.warning(String.format("Application.index(): error getting average atmospheric pressure: %s", e.toString()));
         }
@@ -122,18 +122,10 @@ public class Application extends Controller {
 
     @Transactional
     public Result index() {
-        Double lastHourAverageTemperature = getLastHourAverageTemperature();
-        Double lastDayAverageTemperature = getLastDayAverageTemperature();
-        Double lastWeekAverageTemperature = getLastWeekAverageTemperature();
+        Double[] averageTemperature = { getLastHourAverageTemperature(), getLastDayAverageTemperature(), getLastWeekAverageTemperature() };
+        Double[] averageHumidity = { getLastHourAverageHumidity(), getLastDayAverageHumidity(), getLastWeekAverageHumidity() };
+        Double[] averagePressure = { getLastHourAveragePressure(), getLastDayAveragePressure(), getLastWeekAveragePressure() };
 
-        Double lastHourAverageHumidity = getLastHourAverageHumidity();
-        Double lastDayAverageHumidity = getLastDayAverageHumidity();
-        Double lastWeekAverageHumidity = getLastWeekAverageHumidity();
-
-        Double lastHourAveragePressure = getLastHourAveragePressure();
-        Double lastDayAveragePressure = getLastDayAveragePressure();
-        Double lastWeekAveragePressure = getLastWeekAveragePressure();
-
-        return ok(index.render(lastHourAverageTemperature, lastDayAverageTemperature, lastWeekAverageTemperature, lastHourAverageHumidity, lastDayAverageHumidity, lastWeekAverageHumidity, lastHourAveragePressure, lastDayAveragePressure, lastWeekAveragePressure));
+        return ok(index.render(Arrays.asList(averageTemperature), Arrays.asList(averageHumidity), Arrays.asList(averagePressure)));
     }
 }
