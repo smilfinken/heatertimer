@@ -11,9 +11,24 @@
  */
 
 #include "SparkCorePolledTimer/SparkCorePolledTimer.h"
+#include "PietteTech_DHT/PietteTech_DHT.h"
 #include "Adafruit_BMP085/Adafruit_BMP085.h"
 #include "SparkJson/SparkJson.h"
 #include "HttpClient/HttpClient.h"
+
+
+/*
+ * defines and declarations for the DHT sensor
+ */
+
+#define DHTTYPE DHT22
+#define DHTPIN  D6
+
+void dht_wrapper(); // must be declared before the lib initialization
+PietteTech_DHT dht(DHTPIN, DHTTYPE, dht_wrapper);
+void dht_wrapper() {
+    dht.isrCallback();
+}
 
 
 /*
@@ -66,6 +81,7 @@ SparkCorePolledTimer callServerTimer(CHECKIN_INTERVAL);
 
 char deviceId[64] = "";
 double currentTemperature = MINVALUE;
+double currentHumidity = MINVALUE;
 double currentAirPressure = MINVALUE;
 char sensorStatus[32] = "";
 
@@ -121,6 +137,8 @@ void setStatusConnecting() {
 }
 
 void initSensors() {
+    pinMode(DHTPIN, INPUT_PULLUP);
+    //dht.acquire();
     bmp.begin();
 }
 
@@ -146,9 +164,50 @@ bool performAction(ArduinoJson::JsonObject& action) {
 }
 
 void getReadings() {
-    currentAirPressure = bmp.readPressure();
     currentTemperature = bmp.readTemperature();
-    strcpy(sensorStatus, "OK");
+    currentHumidity = MINVALUE;
+    currentAirPressure = MINVALUE;
+
+    dht.acquire();
+    delay(100);
+    if (!dht.acquiring()) {
+        int result = dht.getStatus();
+
+        switch (result) {
+            case DHTLIB_OK:
+                strcpy(sensorStatus, "OK");
+                currentTemperature = dht.getCelsius();
+                currentHumidity = dht.getHumidity();
+                break;
+            case DHTLIB_ERROR_CHECKSUM:
+                strcpy(sensorStatus, "Checksum error");
+                break;
+            case DHTLIB_ERROR_ISR_TIMEOUT:
+                strcpy(sensorStatus, "ISR time out error");
+                break;
+            case DHTLIB_ERROR_RESPONSE_TIMEOUT:
+                strcpy(sensorStatus, "Response time out error");
+                break;
+            case DHTLIB_ERROR_DATA_TIMEOUT:
+                strcpy(sensorStatus, "Data time out error");
+                break;
+            case DHTLIB_ERROR_ACQUIRING:
+                strcpy(sensorStatus, "Acquiring");
+                break;
+            case DHTLIB_ERROR_DELTA:
+                strcpy(sensorStatus, "Delta time to small");
+                break;
+            case DHTLIB_ERROR_NOTSTARTED:
+                //strcpy(sensorStatus, "Not started");
+                strcpy(sensorStatus, "OK");
+                break;
+            default:
+                strcpy(sensorStatus, "Unknown error");
+                break;
+        }
+    }
+    
+    currentAirPressure = bmp.readPressure();
 }
 
 void callServer() {
@@ -167,6 +226,7 @@ void callServer() {
         jsonBody["sensorId"] = deviceId;
         jsonBody["sensorStatus"] = sensorStatus;
         jsonBody["currentTemp"] = currentTemperature;
+        jsonBody["currentHumidity"] = currentHumidity;
         jsonBody["currentAirPressure"] = currentAirPressure;
         jsonBody["wifiSignal"] = WiFi.RSSI();
         
